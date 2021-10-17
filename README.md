@@ -8,3 +8,17 @@ Please check out my [Wiki](https://github.com/anilkilickaplan/2021FallSwe573/wik
 
 ## Project description
 TBD
+## How to install this project?
+TBD
+A sample instruction:
+
+To use this project, first clone the repo on your device using the command below:
+
+```git init```
+
+```git clone https://github.com/anilkilickaplan/2021FallSwe573```
+## How to use the product?
+TBD
+
+# Footer
+
