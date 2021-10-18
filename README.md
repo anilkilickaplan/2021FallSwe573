@@ -20,5 +20,5 @@ To use this project, first clone the repo on your device using the command below
 ## How to use the product?
 TBD
 
-# Footer
+
 
