@@ -7,32 +7,35 @@ assignees: ''
 
 ---
 
-**Describe the bug**
-A clear and concise description of what the bug is.
+Issue tracker is **ONLY** used for reporting bugs. New features should be discussed on our slack channel. Please use [stackoverflow](https://stackoverflow.com) for supporting issues.
 
-**To Reproduce**
-Steps to reproduce the behavior:
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
-4. See error
+<!--- Provide a general summary of the issue in the Title above -->
 
-**Expected behavior**
-A clear and concise description of what you expected to happen.
+## Expected Behavior
+<!--- Tell us what should happen -->
 
-**Screenshots**
-If applicable, add screenshots to help explain your problem.
+## Current Behavior
+<!--- Tell us what happens instead of the expected behavior -->
 
-**Desktop (please complete the following information):**
- - OS: [e.g. iOS]
- - Browser [e.g. chrome, safari]
- - Version [e.g. 22]
+## Possible Solution
+<!--- Not obligatory, but suggest a fix/reason for the bug, -->
 
-**Smartphone (please complete the following information):**
- - Device: [e.g. iPhone6]
- - OS: [e.g. iOS8.1]
- - Browser [e.g. stock browser, safari]
- - Version [e.g. 22]
+## Steps to Reproduce
+<!--- Provide a link to a live example, or an unambiguous set of steps to -->
+<!--- reproduce this bug. Include code to reproduce, if relevant -->
+1.
+2.
+3.
+4.
 
-**Additional context**
-Add any other context about the problem here.
+## Context (Environment)
+<!--- How has this issue affected you? What are you trying to accomplish? -->
+<!--- Providing context helps us come up with a solution that is most useful in the real world -->
+
+<!--- Provide a general summary of the issue in the Title above -->
+
+## Detailed Description
+<!--- Provide a detailed description of the change or addition you are proposing -->
+
+## Possible Implementation
+<!--- Not obligatory, but suggest an idea for implementing addition or change -->
