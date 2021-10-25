@@ -1,4 +1,4 @@
-Thank you for your contribution to the Fabrikam Fiber repo. 
+Thank you for your contribution to the 2021FallSwe573 repo. 
 Before submitting this PR, please make sure:
 
 - [ ] Your code builds clean without any errors or warnings
