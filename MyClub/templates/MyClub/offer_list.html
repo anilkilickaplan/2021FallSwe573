@@ -1,0 +1,34 @@
+{% extends 'landing/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-5 col-sm-12">
+                <h5>Create Offer</h5>
+            </div>
+        </div>
+        <div class="row justify-content-center mt-3 mb-5">
+            <div class="col-md-5 col-sm-12">
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form | crispy }}
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-dark mt-3">Submit</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% for offer in offer_list %}
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-5 col-sm-12 border-bottom position-relative">
+                <p><strong>{{ offer.offerOwner }}</strong> 
+                           {{ offer.offerCreatedDate }}</p>
+                <p>{{ offer.offerDescription }}</p>
+                <p>{{ offer.offerDate }}</p>
+                <a href="{% url 'offer-detail' offer.pk %}" class="stretched-link"></a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endblock content %}
