@@ -1,0 +1,24 @@
+{% extends 'landing/base.html' %}
+
+{% block content %}
+    <h2> My events </h2>
+
+    {% for event in events%}
+               
+        <div class="card">
+            <div class="card-header"> Event 
+            </div> 
+        
+            <div class="card-body">
+                <h5> class="card-title">{{ event }}</h5>
+                
+                <p class="card-text"></p>
+                <li>{{ event }}</li>
+                
+                <a href="#" class="card-link">Event link</a>
+
+            </div>
+        </div>
+
+    {% endfor %}
+{% endblock content %}
