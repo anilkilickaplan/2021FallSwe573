@@ -5,24 +5,49 @@
     <div class="container">
         <div class="row mt-5">
             <div class="col-md-5 col-sm-6">
-                <a href="{% url 'event-list' %}" class="btn btn-light">Back To Events</a>
+                <a href="{% url 'event-list' %}" class="btn btn-dark">Back To Events</a>
             </div>
-        <div class="row justify-content-center mt-3">
+        </div>
+
+        <!-- <div class="row justify-content-center mt-3">
             <div class="col-md-5 col-sm-12 border-bottom">
                 <p>
                     <img src="{{ event.eventpicture.url }}"/>
-                    <strong>{{ event.eventcreater }}</strong> {{ event.ceventreateddate}}</p>
-                    {% if request.user == event.eventcreater %}
-                        <a href="{% url 'event-edit' event.pk %}" style="color: #333;">Edit</a>
-                        <a href="{% url 'event-delete' event.pk %}" style="color: #333;">Delete</a>
-                    {% endif %}
-                <p>{{ event.eventname }}</p>
-                <p>{{ event.eventdescription }}</p>
-                <p>{{ event.eventlocation }}</p>
-                <p>{{ event.eventdate }}</p>
-                <p>{{ event.eventcapacity }}</p>
+                    <strong>{{ event.eventowner }}</strong> 
+                    {{ event.eventreateddate}}
+                </p>
+                    
+               
+                
+            </div>
+        </div> -->
+
+        <div class="card">
+            <div class="card-header"> Event Details 
+            </div> 
+          
+            <div class="card-body">
+              <h5 class="card-title">{{ event.eventlocation }}</h5>
+            
+              <p class="card-text"></p>
+              <li>{{ event.eventname }}</li>
+              <li>{{ event.eventdescription }}</li>
+              <li>{{ event.eventlocation }}</li> 
+              <li>{{ event.eventdate }}</li>
+              <li>{{ event.eventtime }}</li>
+              <li>{{ event.eventcapacity }}</li>
+
+              {% if request.user.id == event.eventowner %}
+                 <a href="{% url 'event-edit' event.pk %}" style="color: #333;">Edit</a>
+                 <a href="{% url 'event-delete' event.pk %}" style="color: #333;">Delete</a>
+              {% endif %}
+              
             </div>
         </div>
+        
+
+
+
 
     </div>
 {% endblock content %}

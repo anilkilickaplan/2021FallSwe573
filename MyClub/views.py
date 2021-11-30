@@ -4,8 +4,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.urls.base import reverse
 from django.views import View
-from .models import Offer, UserProfile, Event, Feedback
-from .forms import OfferForm, EventForm, FeedbackForm
+from .models import Offer, OfferApplication, UserProfile, Event, Review
+from .forms import OfferForm, EventForm, ReviewForm
 from django.views.generic.edit import UpdateView, DeleteView
 from datetime import datetime
 from django.http import HttpResponseRedirect, request
@@ -53,12 +53,12 @@ class OfferDetailView(View):
     def get(self, request, pk, *args, **kwargs):
         offer = Offer.objects.get(pk=pk)
         form = OfferForm()
-        # form = FeedbackForm()
+        # form = ReviewForm()
 
         context = {
             'offer': offer,
             'form': form,
-            # 'feedbacks': feedbacks,
+            # 'reviews': reviews,
         }
 
         return render(request, 'myclub/offer_detail.html', context)
@@ -69,20 +69,20 @@ class OfferDetailView(View):
     """
     def post(self, request, pk, *args, **kwargs):
         offer = Offer.objects.get(pk=pk)
-        form = FeedbackForm(request.POST)
+        form = ReviewForm(request.POST)
 
         if form.is_valid():
-            new_feedback = form.save(commit=False)
-            new_feedback.creater = request.user
-            new_feedback.offer = offer
-            new_feedback.save()
+            new_review = form.save(commit=False)
+            new_review.reviewowner = request.user
+            new_review.offer = offer
+            new_review.save()
         
-        feedbacks = Feedback.objects.filter(offer=offer).order_by('-offerCreatedDate')
+        reviews = Review.objects.filter(offer=offer).order_by('-offerCreatedDate')
 
         context = {
             'offer': offer,
             'form': form,
-            'feedbacks': feedbacks,
+            'reviews': reviews,
         }
 
         return render(request, 'myclub/offer_detail.html', context)
@@ -114,11 +114,6 @@ class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 
 
 
-
-
-
-
-
 # EVENT RELATED
 class EventListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -145,7 +140,7 @@ class EventListView(LoginRequiredMixin, View):
             new_event.save()
             submitted = True
             #return redirect('event/create_event', submitted=True)
-            #return HttpResponseRedirect('create_event' + '?' + 'submitted=True')
+            return HttpResponseRedirect('create_event' + '?' + 'submitted=True')
      
 
         context = {
@@ -154,7 +149,7 @@ class EventListView(LoginRequiredMixin, View):
             'submitted': submitted,
             }
 
-        return render(request, 'myclub/event_list.html', context)
+        return render(request, 'myclub/create_event.html', context)
 
 
 
@@ -203,10 +198,23 @@ class ProfileView(View):
     def get(self, request, pk, *args, **kwargs):
         profile = UserProfile.objects.get(pk=pk)
         user = profile.user
-
+        userfollowers = user.userfollowers.all()
+        if len(userfollowers) == 0:
+            is_following = False
+        for follower in userfollowers:
+            if follower == request.user:
+                is_following = True
+                break
+            else:
+                is_following = False
+        
+        
+        number_of_followers = len(userfollowers)
         context = {
             'user': user,
             'profile': profile,
+            'number_of_followers': number_of_followers,
+            'is_following': is_following
         }
         return render(request, 'myclub/profile.html', context)
 
@@ -280,4 +288,72 @@ class myOffersView(View):
 
 
 
+class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = UserProfile
+    fields = ['name', 'bio', 'birth_date', 'location', 'picture']
+    template_name = 'social/profile_edit.html'
+    
+    def get_success_url(self):
+        pk = self.kwargs['pk']
+        return reverse_lazy('profile', kwargs={'pk': pk})
+    
+    def test_func(self):
+        profile = self.get_object()
+        return self.request.user == profile.user
 
+class AddFollower(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        profile = UserProfile.objects.get(pk=pk)
+        profile.userFollowers.add(request.user)
+        return redirect('profile', pk=profile.pk)
+
+class RemoveFollower(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        profile = UserProfile.objects.get(pk=pk)
+        profile.userFollowers.remove(request.user)
+        return redirect('profile', pk=profile.pk)
+
+class RemoveMyFollower(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        userFollower_pk = self.kwargs['userFollower_pk']
+        userFollower = UserProfile.objects.get(pk=userFollower_pk).user
+        profile = UserProfile.objects.get(pk=request.user.pk)
+        profile.userFollowers.remove(userFollower)
+        return redirect('userFollowers', pk=request.user.pk)
+
+class FollowersListView(LoginRequiredMixin, View):
+    def get(self, request, pk, *args, **kwargs):
+        profile = UserProfile.objects.get(pk=pk)
+        userFollowers = profile.userFollowers.all()
+
+        context = {
+            'userFollowers': userFollowers,
+            'profile': profile,
+        }
+
+        return render(request, 'myclub/userfollowers_list.html', context)
+
+class ApplicationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = OfferApplication
+    template_name = 'social/application_delete.html'
+
+    def get_success_url(self):
+        pk = self.kwargs['offer_pk']
+        return reverse_lazy('offer-detail', kwargs={'pk': pk})
+    
+    def test_func(self):
+        application = self.get_object()
+        return self.request.user == application.applicant
+
+class ApplicationEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+    model = OfferApplication
+    fields = ['approved']
+    template_name = 'offer/application_edit.html'
+    
+    def get_success_url(self):
+        pk = self.kwargs['offer_pk']
+        return reverse_lazy('offer-detail', kwargs={'pk': pk})
+    
+    def test_func(self):
+        application = self.get_object()
+        return self.request.user == application.offer.creater

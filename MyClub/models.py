@@ -12,7 +12,9 @@ class Offer(models.Model):
     offerCreatedDate = models.DateTimeField(default=timezone.now)
     offerDescription = models.TextField()
     offerName = models.TextField()
-    offerDate = models.DateTimeField(default=timezone.now)
+    offerDate = models.DateField(default=timezone.now)
+    offerTime = models.TimeField(default=timezone.now)
+    offerDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
     offerLocation = models.CharField(max_length=100, blank=True, null=True)
     offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     offerIsActive = models.BooleanField(default=True)
@@ -23,15 +25,24 @@ class Event(models.Model):
     eventName = models.TextField()
     eventDescription = models.TextField()
     eventLocation = models.CharField(max_length=100, blank=True, null=True)
-    eventDate = models.DateTimeField(default=timezone.now)
+    eventDate = models.DateField(default=timezone.now)
+    eventTime = models.TimeField(default=timezone.now)
+    eventDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
     eventCapacity = models.IntegerField()
     eventIsActive = models.BooleanField(default=True)
 
-class Feedback(models.Model):
-    feedback = models.TextField()
-    createddate = models.DateTimeField(default=timezone.now)
+
+class OfferApplication(models.Model):
+    date = models.DateTimeField(default=timezone.now)
+    applicant = models.ForeignKey(User, on_delete=models.CASCADE)
     service = models.ForeignKey('Offer', on_delete=models.CASCADE)
-    creater = models.ForeignKey(User, on_delete=models.CASCADE)
+    approved = models.BooleanField(default=True)
+
+class Review(models.Model):
+    review = models.TextField()
+    createddate = models.DateTimeField(default=timezone.now)
+    reviewOffer = models.ForeignKey('Offer', on_delete=models.CASCADE)
+    reviewOwner = models.ForeignKey(User, on_delete=models.CASCADE)
 
 
 class UserProfile(models.Model):
@@ -41,6 +52,8 @@ class UserProfile(models.Model):
     userBirthDate = models.DateField(null=True, blank=True)
     userLocation = models.CharField(max_length=100, blank=True, null=True)
     userCredits=models.IntegerField(default=5)
+    userPicture = models.ImageField(upload_to='uploads/profile_pictures/', default='uploads/profile_pictures/default.png', blank=True)
+    userFollowers = models.ManyToManyField(User, blank=True, related_name='userfollowers')
 
 #class OfferAttendees(models.Model):
 
