@@ -1,0 +1,27 @@
+v
+{% extends 'landing/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center mt-3">
+            <div class="col-md-5 col-sm-12">
+                <h5>Followers</h5>
+            </div>
+        </div>
+        {% for userFollower in userFollowers %}
+            <div class="row justify-content-center mt-3">
+                <div class="col-md-5 col-sm-12 border-bottom position-relative">
+                    <p><a style="text-decoration: none;" class="text-primary" href="{% url 'profile' userfollower.pk %}">@{{ userFollower.userName }}</a></p>
+                    {% if profile.user == request.user %}
+                    <form method="POST" action="{% url 'remove-my-userFollower' userfollower.pk %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-danger" type=submit>Remove</button>
+                    </form>
+                    {% else %}
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

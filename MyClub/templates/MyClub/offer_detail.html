@@ -37,16 +37,16 @@
         -->
 
         <!--
-        {% for feedback in feedbacks %}
+        {% for review in reviews %}
         <div class="row justify-content-center mt-3 mb-5">
             <div class="col-md-5 col-sm-12 border-bottom">
                 <p>
-                    <strong>{{ feedback.creater }}</strong> {{ feedback.createddate }}
-                    {% if request.user == feedback.creater %}
-                    <a href="{% url 'feedback-delete' offer.pk feedback.pk %}" style="color: #333;">Delete</a>
+                    <strong>{{ review.creater }}</strong> {{ review.createddate }}
+                    {% if request.user == review.creater %}
+                    <a href="{% url 'review-delete' offer.pk review.pk %}" style="color: #333;">Delete</a>
                     {% endif %}
                 </p>
-                <p>{{ feedback.feedback }}</p>
+                <p>{{ review.review }}</p>
             </div>
         </div>
         {% endfor %}
