@@ -18,6 +18,7 @@ class Offer(models.Model):
     offerLocation = models.CharField(max_length=100, blank=True, null=True)
     offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     offerIsActive = models.BooleanField(default=True)
+    
 
 class Event(models.Model):
     eventOwner = models.ForeignKey(User, on_delete=models.CASCADE)

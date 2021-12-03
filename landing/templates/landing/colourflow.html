@@ -3,38 +3,47 @@
   <head>
     <meta charset="utf-8">
     <style>
+      path {
+        transform-origin: 50% 0%;
+      }
       .background--custom {
         background-color: #FFFFFF;
+        position: absolute;
         width: 100vw;
         height: 100vh;
-        position: absolute;
-        overflow: hidden;
-        z-index: -2;
+        z-index: -1;
         top: 0;
         left: 0;
       }
-      canvas#canvas {
-        z-index: -1;
-        position: absolute;
-        width: 100%;
-        height: 60%;
-        transform: rotate(-60deg) scale(2) translateY(-56%);
-        --gradient-color-1: #ef008f; 
-        --gradient-color-2: #6ec3f4; 
-        --gradient-color-3: #7038ff;  
-        --gradient-color-4: #ffba27;
-        --gradient-speed: 0.000006;
+      @keyframes path0 {
+        0% {
+          transform: rotate(-10deg);
+        }
+        100% {
+          transform: rotate(10deg);
+        }
+      }
+      @keyframes path1 {
+        0% {
+          transform: rotate(-30deg);
+        }
+        100% {
+          transform: rotate(30deg);
+        }
+      }
+      @keyframes path2 {
+        0% {
+          transform: rotate(40deg);
+        }
+        100% {
+          transform: rotate(-40deg);
+        }
       }
     </style>
   </head>
   <body>
-    <div class="background--custom">
-      <canvas id="canvas" />
-    </div>
-    <script src="https://cdn.jsdelivr.net/gh/greentfrapp/pocoloco@minigl/minigl.js"></script>
-    <script>
-    var gradient = new Gradient();
-    gradient.initGradient("#canvas");
-    </script>
+    <svg class="background--custom" id="demo" viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path fill="#FFFF00" fill-opacity="0.7" d="M-100 -100L200 -100L200 30L-100 30Z" style="animation: path0 5s linear infinite alternate;" /><path fill="#00FFFF" fill-opacity="0.7" d="M-100 -100L200 -100L200 20L-100 20Z" style="animation: path1 12.5s linear infinite alternate;" /><path fill="#FF00FF" fill-opacity="0.2" d="M-100 -100L200 -100L200 20L-100 20Z" style="animation: path2 30s linear infinite alternate;" />
+    </svg>
   </body>
 </html>

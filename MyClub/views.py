@@ -28,25 +28,30 @@ class OfferListView(LoginRequiredMixin, View):
 
         return render(request, 'myclub/offer_list.html', context)
 
+    
+
+class OfferCreateView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        form = OfferForm()
+        
+        context = {
+            'form': form,
+        }
+
+        return render(request, 'myclub/create_offer.html', context)
+
     def post(self, request, *args, **kwargs):
-        submitted = False
-        offers = Offer.objects.all().order_by('-offerCreatedDate')
         form = OfferForm(request.POST)
 
         if form.is_valid():
             new_offer = form.save(commit=False)
             new_offer.offerOwner = request.user
             new_offer.save()
+            submitted = True
 
 
-        context = {
-            #'offer_list': offers,
-            'form': form,
-            'submitted': submitted
-        }
-        return render(request, 'myclub/offer_list.html', context)
+        return redirect('offer-list')
 
-        #return render(request, 'myclub/create_offer.html', context)
 
 
 class OfferDetailView(View):
@@ -66,28 +71,7 @@ class OfferDetailView(View):
     def post(self, request, *args, **kwargs):
         pass
 
-    """
-    def post(self, request, pk, *args, **kwargs):
-        offer = Offer.objects.get(pk=pk)
-        form = ReviewForm(request.POST)
-
-        if form.is_valid():
-            new_review = form.save(commit=False)
-            new_review.reviewowner = request.user
-            new_review.offer = offer
-            new_review.save()
-        
-        reviews = Review.objects.filter(offer=offer).order_by('-offerCreatedDate')
-
-        context = {
-            'offer': offer,
-            'form': form,
-            'reviews': reviews,
-        }
-
-        return render(request, 'myclub/offer_detail.html', context)
-    """
-
+  
 
 class OfferEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Offer
@@ -113,7 +97,6 @@ class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
         return self.request.user == offer.offerOwner
 
 
-
 # EVENT RELATED
 class EventListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -127,30 +110,26 @@ class EventListView(LoginRequiredMixin, View):
 
         return render(request, 'myclub/event_list.html', context)
 
+class EventCreateView(LoginRequiredMixin, View):
+      def get(self, request, *args, **kwargs):
+        form = EventForm()
+        
+        context = {
+            'form': form,
+        }
 
-    def post(self, request, *args, **kwargs):
-        submitted = False
+        return render(request, 'myclub/create_event.html', context)
 
-        #events = Event.objects.all().order_by('-eventCreatedDate')
+      def post(self, request, *args, **kwargs):
+
         form = EventForm(request.POST)
 
         if form.is_valid():
             new_event = form.save(commit=False)
             new_event.eventOwner = request.user
             new_event.save()
-            submitted = True
-            #return redirect('event/create_event', submitted=True)
-            return HttpResponseRedirect('create_event' + '?' + 'submitted=True')
-     
 
-        context = {
-            #'event_list': events,
-            'form': form,
-            'submitted': submitted,
-            }
-
-        return render(request, 'myclub/create_event.html', context)
-
+        return redirect('event-list')
 
 
 class EventDetailView(View):
