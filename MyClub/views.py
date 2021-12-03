@@ -132,10 +132,11 @@ class OfferEditView(LoginRequiredMixin, View):
         return render(request, 'myclub/offer_edit.html', context)
 
     def post(self, request, *args, **kwargs):
-        form = OfferForm(instance= Offer.id)
+        form = OfferForm(request.POST)
 
         if form.is_valid():
             edit_offer = form.save(commit=False)
+            edit_offer.offerOwner = request.user
             edit_offer.save()
 
 
