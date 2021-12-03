@@ -3,9 +3,9 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.urls.base import reverse
-from django.views import View
+from django.views import View, generic
 from .models import Offer, OfferApplication, UserProfile, Event, Review
-from .forms import OfferForm, EventForm, ReviewForm
+from .forms import OfferApplicationForm, OfferForm, EventForm, ReviewForm
 from django.views.generic.edit import UpdateView, DeleteView
 from datetime import datetime
 from django.http import HttpResponseRedirect, request
@@ -29,7 +29,6 @@ class OfferListView(LoginRequiredMixin, View):
         return render(request, 'myclub/offer_list.html', context)
 
     
-
 class OfferCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         form = OfferForm()
@@ -53,38 +52,103 @@ class OfferCreateView(LoginRequiredMixin, View):
         return redirect('offer-list')
 
 
-
 class OfferDetailView(View):
     def get(self, request, pk, *args, **kwargs):
         offer = Offer.objects.get(pk=pk)
-        form = OfferForm()
+        #form = OfferForm()
         # form = ReviewForm()
+
+        applications = OfferApplication.objects.filter(appliedOffer=pk).order_by('-applicationDate')
+        applications_this = applications.filter(applicant=request.user)
+        number_of_accepted = len(applications.filter(isApproved=True))
+        if len(applications) == 0:
+            is_applied = False
+            is_accepted = False
+        for application in applications:
+            if application.applicant == request.user:
+                is_applied = True
+                is_accepted = application.isApproved
+                break
+            else:
+                is_applied = False
+                is_accepted = False
 
         context = {
             'offer': offer,
-            'form': form,
-            # 'reviews': reviews,
+            'applications': applications,
+            'number_of_accepted': number_of_accepted,
+            'is_applied': is_applied,
+            'applications_this': applications_this,
+            'is_accepted': is_accepted,
         }
 
         return render(request, 'myclub/offer_detail.html', context)
 
-    def post(self, request, *args, **kwargs):
-        pass
+
+    def post(self, request, pk, *args, **kwargs):
+        offer = Offer.objects.get(pk=pk)
+        form = OfferApplicationForm(request.POST)
+        applications = OfferApplication.objects.filter(offer=pk).order_by('-applicationDate')
+        applications_this = applications.filter(applicant=request.user)
+        number_of_accepted = len(applications.filter(isApproved=True))
+        if len(applications) == 0:
+            is_applied = False
+        for application in applications:
+            if application.applicant == request.user:
+                is_applied = True
+                break
+            else:
+                is_applied = False
+
+        if form.is_valid():
+            if is_applied == False:
+                new_application = form.save(commit=False)
+                new_application.applicant = request.user
+                new_application.offer = offer
+                new_application.isApproved = False
+                new_application.save()
+
+        context = {
+            'offer': offer,
+            'form': form,
+            'applications': applications,
+            'number_of_accepted': number_of_accepted,
+            'is_applied': is_applied,
+            'applications_this': applications_this,
+        }
+
+        return redirect('offer-detail', pk=Offer.pk) 
 
   
+class OfferEditView(LoginRequiredMixin, View):
+    def get(self, request, *args, pk, **kwargs):
+        offer = Offer.objects.get(pk=pk)
 
-class OfferEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Offer
-    fields = ['description']
-    template_name = 'myclub/offer_edit.html'
+        form = OfferForm(instance= offer)
+        context = {
+            'form': form,
+        }
 
-    def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse_lazy('offer-detail', kwargs={'pk': pk})
+        return render(request, 'myclub/offer_edit.html', context)
 
-    def test_func(self):
-        offer = self.get_object()
-        return self.request.user == offer.offerOwner
+    def post(self, request, *args, **kwargs):
+        form = OfferForm(instance= Offer.id)
+
+        if form.is_valid():
+            edit_offer = form.save(commit=False)
+            edit_offer.save()
+
+
+        return redirect('offer-list')
+    
+
+        # def get_success_url(self):
+        #     pk = self.kwargs['pk']
+        #     return reverse_lazy('offer-detail', kwargs={'pk': pk})
+
+        # def test_func(self):
+        #     offer = self.get_object()
+        #     return self.request.user == offer.offerOwner
 
 
 class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
@@ -150,7 +214,7 @@ class EventDetailView(View):
 
 class EventEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = Event
-    fields = ['eventName', 'eventDescription', 'eventDate', 'eventLocation', 'eventCapacity']
+    fields = ['eventName','eventDescription', 'eventDate','eventTime','eventCapacity','eventLocation']
     template_name = 'myclub/event_edit.html'
 
     def get_success_url(self):
@@ -298,6 +362,7 @@ class RemoveMyFollower(LoginRequiredMixin, View):
         userFollower = UserProfile.objects.get(pk=userFollower_pk).user
         profile = UserProfile.objects.get(pk=request.user.pk)
         profile.userFollowers.remove(userFollower)
+        
         return redirect('userFollowers', pk=request.user.pk)
 
 class FollowersListView(LoginRequiredMixin, View):
@@ -312,9 +377,10 @@ class FollowersListView(LoginRequiredMixin, View):
 
         return render(request, 'myclub/userfollowers_list.html', context)
 
+
 class ApplicationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = OfferApplication
-    template_name = 'social/application_delete.html'
+    template_name = 'myclub/application_delete.html'
 
     def get_success_url(self):
         pk = self.kwargs['offer_pk']
@@ -326,8 +392,8 @@ class ApplicationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView)
 
 class ApplicationEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = OfferApplication
-    fields = ['approved']
-    template_name = 'offer/application_edit.html'
+    fields = ['isApproved']
+    template_name = 'myclub/application_edit.html'
     
     def get_success_url(self):
         pk = self.kwargs['offer_pk']
@@ -335,4 +401,4 @@ class ApplicationEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
     def test_func(self):
         application = self.get_object()
-        return self.request.user == application.offer.creater
+        return self.request.user == application.offer.offerOwner

@@ -34,10 +34,10 @@ class Event(models.Model):
 
 
 class OfferApplication(models.Model):
-    date = models.DateTimeField(default=timezone.now)
+    applicationDate = models.DateTimeField(default=timezone.now)
     applicant = models.ForeignKey(User, on_delete=models.CASCADE)
-    service = models.ForeignKey('Offer', on_delete=models.CASCADE)
-    approved = models.BooleanField(default=True)
+    appliedOffer= models.ForeignKey('Offer', on_delete=models.CASCADE)
+    isApproved = models.BooleanField(default=True)
 
 class Review(models.Model):
     review = models.TextField()
