@@ -1,4 +1,3 @@
-v
 {% extends 'landing/base.html' %}
 {% load crispy_forms_tags %}
 
@@ -9,12 +8,12 @@ v
                 <h5>Followers</h5>
             </div>
         </div>
-        {% for userFollower in userFollowers %}
+        {% for follower in followers %}
             <div class="row justify-content-center mt-3">
                 <div class="col-md-5 col-sm-12 border-bottom position-relative">
-                    <p><a style="text-decoration: none;" class="text-primary" href="{% url 'profile' userfollower.pk %}">@{{ userFollower.userName }}</a></p>
+                    <p><a style="text-decoration: none;" class="text-primary" href="{% url 'profile' userfollower.pk %}">{{ userfollower.userName }}</a></p>
                     {% if profile.user == request.user %}
-                    <form method="POST" action="{% url 'remove-my-userFollower' userfollower.pk %}">
+                    <form method="POST" action="{% url 'remove-my-userfollower' userfollower.pk %}">
                         {% csrf_token %}
                         <button class="btn btn-outline-danger" type=submit>Remove</button>
                     </form>

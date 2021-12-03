@@ -1,20 +1,24 @@
 from django.urls import path
 from . import views
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
 
     # HOME
     path('home', views.home, name='home'),
+    
     # OFFER RELATED
     path('offer', views.OfferListView.as_view(), name='offer-list'),
-    path('offer/create', views.OfferListView.as_view(), name='offer-create'),
+    path('offer/create', views.OfferCreateView.as_view(), name='offer-create'),
     path('offer/<int:pk>', views.OfferDetailView.as_view(), name='offer-detail'),
     path('offer/edit/<int:pk>', views.OfferEditView.as_view(), name='offer-edit'),
     path('offer/delete/<int:pk>', views.OfferDeleteView.as_view(), name='offer-delete'),
+    
 
     # EVENT RELATED
     path('event', views.EventListView.as_view(), name='event-list'),
-    path('event/create', views.EventListView.as_view(), name='event-create'),
+    path('event/create', views.EventCreateView.as_view(), name='event-create'),
     path('event/<int:pk>', views.EventDetailView.as_view(), name='event-detail'),
     path('event/edit/<int:pk>', views.EventEditView.as_view(), name='event-edit'),
     path('event/delete/<int:pk>', views.EventDeleteView.as_view(), name='event-delete'),

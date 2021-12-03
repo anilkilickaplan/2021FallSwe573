@@ -11,7 +11,7 @@ class OfferForm(ModelForm):
         fields = ['offerName','offerDescription', 'offerDate','offerTime','offerDuration','offerCapacity','offerLocation']
         widgets = { 
             'offerName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Name'}),
-            'offerDescription':forms.Textarea(attrs={'rows': '3','class': 'form-control','placeholder': 'Offer Description'}), 
+            'offerDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Offer Description'}), 
             'offerDate': DateInput(attrs={'type': 'date'}),
             'offerTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
             'offerDuration': forms.NumberInput(),
@@ -26,11 +26,11 @@ class EventForm(forms.ModelForm):
         fields = ['eventName','eventDescription', 'eventDate','eventTime','eventCapacity','eventLocation']
         widgets = { 
             'eventName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event Name'}),
-            'eventDescription':forms.Textarea(attrs={'rows': '3','class': 'form-control','placeholder': 'Event Description'}), 
+            'eventDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Event Description'}), 
             'eventDate': DateInput(attrs={'type': 'date'}),
-            'eventTime': TimeInput(attrs={'type': 'time'}),
-            'eventCapacity': TimeInput(attrs={'type': 'time'}),
-            'eventLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event Location'}),
+            'eventTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
+            'eventCapacity': forms.NumberInput(),
+            'eventLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event City'}),
         }
         
 
