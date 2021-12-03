@@ -1,6 +1,6 @@
 from django import forms
 from django.forms import ModelForm
-from .models import Offer, Event, Review
+from .models import Offer, Event, OfferApplication, Review
 from django.forms.widgets import DateInput, TimeInput
 
 
@@ -47,3 +47,9 @@ class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['review']
+
+class OfferApplicationForm(forms.ModelForm):    
+
+    class Meta:
+        model = OfferApplication
+        fields = []

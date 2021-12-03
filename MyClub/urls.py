@@ -23,10 +23,7 @@ urlpatterns = [
     path('event/edit/<int:pk>', views.EventEditView.as_view(), name='event-edit'),
     path('event/delete/<int:pk>', views.EventDeleteView.as_view(), name='event-delete'),
     
-    #path('event/create_event?submitted=', views.EventListView.as_view(), name='event-create'),
-           
-
-    # PROFILE RELATED
+               # PROFILE RELATED
     path('profile/<int:pk>/', views.ProfileView.as_view(), name='profile'),
     path('profile/edit/<int:pk>/', views.ProfileEditView.as_view(), name='profile-edit'),
     path('myoffers/<int:pk>', views.myOffersView.as_view(), name='myoffers-list'),
@@ -37,4 +34,11 @@ urlpatterns = [
     path('profile/<int:pk>/userfollowers/add', views.AddFollower.as_view(), name='add-userfollower'),
     path('profile/<int:pk>/userfollowers/remove', views.RemoveFollower.as_view(), name='remove-userfollower'),
     path('userfollowers/remove/<int:userfollower_pk>', views.RemoveMyFollower.as_view(), name='remove-my-userfollower'),
+
+    # APPLICATIONS
+    path('offer/<int:offer_pk>/application/delete/<int:pk>', views.ApplicationDeleteView.as_view(), name='application-delete'),
+    path('offer/<int:offer_pk>/application/edit/<int:pk>/', views.ApplicationEditView.as_view(), name='application-edit'),
+
+
+
 ]
