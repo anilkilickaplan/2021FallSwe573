@@ -143,14 +143,6 @@ class OfferEditView(LoginRequiredMixin, View):
         return redirect('offer-list')
     
 
-        # def get_success_url(self):
-        #     pk = self.kwargs['pk']
-        #     return reverse_lazy('offer-detail', kwargs={'pk': pk})
-
-        # def test_func(self):
-        #     offer = self.get_object()
-        #     return self.request.user == offer.offerOwner
-
 
 class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Offer
@@ -214,18 +206,26 @@ class EventDetailView(View):
 
 
 class EventEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = Event
-    fields = ['eventName','eventDescription', 'eventDate','eventTime','eventCapacity','eventLocation']
-    template_name = 'myclub/event_edit.html'
+    def get(self, request, *args, pk, **kwargs):
+        offer = Event.objects.get(pk=pk)
 
-    def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse_lazy('event-detail', kwargs={'pk': pk})
+        form = EventForm(instance= offer)
+        context = {
+            'form': form,
+        }
 
-    def test_func(self):
-        event = self.get_object()
-        return self.request.user == event.eventOwner
+        return render(request, 'myclub/event_edit.html', context)
 
+    def post(self, request, *args, **kwargs):
+        form = EventForm(request.POST)
+
+        if form.is_valid():
+            edit_offer = form.save(commit=False)
+            edit_offer.eventOwner = request.user
+            edit_offer.save()
+
+
+        return redirect('event-list')
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Event
@@ -265,7 +265,7 @@ class ProfileView(View):
 
 class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     model = UserProfile
-    fields = ['name', 'bio', 'birth_date', 'location', 'picture']
+    fields = ['userPicture', 'userName', 'userBio', 'userBirthDate', 'userLocation']
     template_name = 'myclub/profile_edit.html'
 
     def get_success_url(self):
@@ -331,19 +331,6 @@ class myOffersView(View):
             messages.WARNING(request,("There is a problem with authentication. my_offers (views) could not fetch user authentication"))
 
 
-
-class ProfileEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
-    model = UserProfile
-    fields = ['name', 'bio', 'birth_date', 'location', 'picture']
-    template_name = 'social/profile_edit.html'
-    
-    def get_success_url(self):
-        pk = self.kwargs['pk']
-        return reverse_lazy('profile', kwargs={'pk': pk})
-    
-    def test_func(self):
-        profile = self.get_object()
-        return self.request.user == profile.user
 
 class AddFollower(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
