@@ -9,21 +9,26 @@ https://docs.djangoproject.com/en/2.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/2.2/ref/settings/
 """
-
+from pathlib import Path
+from environ import Env
 import os
 
+env = Env()
+env.read_env(env_file='ShareClub/.env')
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'm!rockf+snbas+3$6iwo#54&x@&@rw7x=d6c0t4au4gunb9&y4'
+SECRET_KEY = env('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DJANGO_DEBUG', default=False)
 
 ALLOWED_HOSTS = []
 
@@ -93,14 +98,21 @@ WSGI_APPLICATION = 'ShareClub.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'DevShareclub', 
-        'USER': 'postgres', 
-        'PASSWORD': 'q1w2e3',
-        'HOST': '127.0.0.1', 
-        'PORT': '5432',
+        'ENGINE': env('DB_ENGINE', default = 'django.db.backends.postgresql_psycopg2'),
+        'NAME': env('DB_NAME', default='DevShareclub'), 
+        'USER': env('DB_USER', default='postgres'), 
+        'PASSWORD': env('DB_PASSWORD', default='q1w2e3'),
+        'HOST': env('DB_HOST', default='127.0.0.1'), 
+        'PORT': env('DB_PORT', default='5432'),
     }
 }
+CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS").split(" ")
+
+# DATABASES = {
+#     'default': env.db()
+# }
+
+
 
 
 # Password validation
@@ -147,3 +159,4 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'home'
 ACCOUNT_EMAIL_REQUIRED = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
