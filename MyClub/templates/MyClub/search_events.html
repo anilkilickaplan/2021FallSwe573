@@ -2,17 +2,15 @@
 
 {% block content %}
     <center>
-    {% if searched %}
-        <h1>You searched for {{ searched }}</h1>    
-        <br/>
-        {% for event in events %}
-        <a href="{% url 'events-list' events.pk %}">{{ event }} </a> <br/>
-        {% endfor %}
+        {% if searched %}
+            <h1>You searched for {{ searched }}</h1>    
+            <br/>
+            {% for event in events %}
+            <a href="{% url 'events-list' events.pk %}">{{ event }} </a> <br/>
+            {% endfor %}
 
-    {% else %}
-        <h1> forgot to give keyword to search for an EVENT</h1>    
-    {% endif %}
-    
-
+        {% else %}
+            <h1> You forgot to give keyword to search for an EVENT</h1>    
+        {% endif %}
     </center>
 {% endblock %}

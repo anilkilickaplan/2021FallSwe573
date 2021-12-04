@@ -2,50 +2,32 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <div class="container">
-        <div class="row justify-content-center mt-3">
-            <div class="col-md-5 col-sm-12">
-                <h5>Create Event</h5>
-            </div>
-        </div>
-        <div class="row justify-content-center mt-3 mb-5">
-            <div class="col-md-5 col-sm-12">
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form | crispy }}
-                    <div class="d-grid gap-2">
-                        <button class="btn btn-dark mt-3">Submit</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        
         
         {% for event in event_list %}
-
-        <div class="card">
-            <div class="card-header"> Event 
-            </div> 
-        
-            <div class="card-body">
-            <h5> {{ event }}</h5>
+        <div class="row justify-content-center mt-3">
+            <div class="card" style="width: 50rem;" >
+                <div class="card-header"> Event</div> 
             
-            <p class="card-text"></p>
-                <div class="row justify-content-center mt-3">
-                    <div class="col-md-5 col-sm-12 border-bottom position-relative">
-                        <img src="{{ event.eventpicture.url }}" class="rounded-circle" width="100" height="100" />
-                        <p><strong>{{ event.eventName }}</strong></p>
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.eventName }} </h5>
+                    <img src="{{ event.eventpicture.url }}" class="rounded-circle" width="100" height="100" />
+                    
+                    <p class="card-text">
+                        <p><strong>{{ event.eventName }}, by {{event.eventOwner}}</strong></p>
                         <p>Description: {{ event.eventDescription }}</p>
                         <p>Location: {{ event.eventLocation }}</p>
                         <p>Date: {{ event.eventDate }}</p>
+                        <p>Time: {{ event.eventtime }}</p>
+                        <p>Duration: {{ event.eventDuration }}</p>
                         <p>Event Capacity: {{ event.eventCapacity }}</p>
                         <a href="{% url 'event-detail' event.pk %}" class="stretched-link"></a>
-                    </div>
+                    </p>
                 </div>
-            
             </div>
         </div>
-        
+        <br/>
+
         {% endfor %}
-    </div>
-{% endblock content %}
+    
+{% endblock %}
+

@@ -5,16 +5,37 @@
 <center>
     <br/><br>
     <h1> Hello {{user.username}} </h1>
+    <h2>    This is the home page.</h2>
         
     <br/><br><br><br><br>
-    This is the home page. 
-
-    <div class="jumbotron jumbotron-fluid">
-        <div class="container">
-          <h1 class="display-4">Upcoming organizations</h1>
-          <p class="lead">This is a modified jumbotron that occupies the entire horizontal space of its parent.</p>
-        </div>
+   
+<div class="row">
+  <div class="col-sm-6">
+    <div class="card w-75 h-100">
+      <div class="card-body">
+        <h5 class="card-title">Your events</h5>
+        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <a href="{% url 'event-list' %}" class="btn btn-dark">Discover events</a>
       </div>
+    </div>
+  </div>
+  <div class="col-sm-6">
+    <div class="card w-75 h-100">
+      <div class="card-body">
+        <h5 class="card-title">Your offers</h5>
+        <p class="card-text">If Offer attendee, 
+                                then if multiple link 
+                                        go to My Offers,
+                                      else
+                                        show offer detail
+                              else
+                                Discover offers
+                                         </p>
+        <a href="{% url 'offer-list' %}" class="btn btn-dark">Discover offers</a>
+      </div>
+    </div>
+  </div>
+</div>
 </center>
 
 {% endblock %}

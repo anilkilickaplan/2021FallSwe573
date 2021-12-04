@@ -2,55 +2,54 @@
 
 {% block content %}
 <div class="container">
-    <div class="row mt-5">
-        <div class="col-md-3 col-sm-6">
-            <a href="{% url 'offer-list' %}" class="btn btn-light">Back to Offers</a>
-            <a href="{% url 'event-list' %}" class="btn btn-light">Back to Events</a>
-
-        </div>
-    </div>
+ 
     <div class="row justify-content-center mt-5">
         <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 pt-3">
-            <img src="{{ profile.picture.url }}" class="rounded-circle" width="100" height="100" />
-            {% if profile.name %}
-            <h3 class="py-4">{{ profile.name }}             
+
+           
+                {% if profile.userName %}
+                    <h3 class="py-4">{{ profile.userName }} </h3>
+                {% else %}
+                    <h3 class="py-4">{{ user.userName }}</h3>
+                {% endif %}
+                            
                 <span>
                     {% if request.user == user %}
+                    <span style="float:right;"> 
                         <a href="{% url 'profile-edit' profile.pk %}" style="color: #333;">Edit</a>
                     {% endif %}
-                </span>
-                {% else %}
-                <h3 class="py-4">{{ user.username }}
-                    <span>
-                        {% if request.user == user %}
-                        <a href="{% url 'profile-edit' profile.pk %}" style="color: #333;">Edit</a>
-                        {% endif %}
                     </span>
-                </h3>
-                {% endif %}
-            </h3>
-            
-            {% if profile.location %}
-            <p>{{ profile.location }}</p>
-            {% endif %}
-            {% if profile.birth_date %}
-            <p>{{ profile.birth_date }}</p>
-            {% endif %}
-            {% if profile.bio %}
-            <p>{{ profile.bio }}</p>
-            {% endif %}
-        </div>
-    </div>
+                </span>
+                <img src="{{ profile.picture.url }}" class="rounded-circle" width="100" height="100" />
 
-    {% for offer in offers %}
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-8 col-sm-12 border-bottom position-relative">
-            <p><strong>{{ offer.offerOwner }}</strong> {{ offer.offerCreatedDate }}</p>
-            <p>{{ offer.offerDescription }}</p>
-            <p>{{ offer.offerDate }}</p>
-            <a class="stretched-link" href="{% url 'offer-detail' offer.pk %}"></a>
+                <p>Birth Location: {{ profile.userLocation }}</p>
+                <p>Birth Date: {{ profile.userBirthDate }}</p>
+                <p>{{ profile.userBio }}</p>
+
+                <div class="mb-3">
+                {% if number_of_followers == 0 %}
+                     <a href="#">No followers yet!</a>
+                {% else %}
+                     <a href="{% url 'followers' profile.pk %}">Followers: {{ number_of_followers }}</a>
+                {% endif %}
+
+               
+                {% if user == request.user %}
+                {% else %}
+                    {% if is_following %}
+                        <form method="POST" action="{% url 'remove-userfollower' profile.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-danger" type=submit>UnFollow</button>
+                        </form>
+                    {% else %}
+                        <form method="POST" action="{% url 'add-userfollower' profile.pk %}">
+                            {% csrf_token %}
+                            <button class="btn btn-outline-dark" type=submit>Follow</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            </div>
         </div>
     </div>
-    {% endfor %}
 </div>
 {% endblock content %}

@@ -1,80 +1,55 @@
 from django import forms
-from .models import Offer, Event, Feedback
+from django.forms import ModelForm
+from .models import Offer, Event, OfferApplication, Review
+from django.forms.widgets import DateInput, TimeInput
 
 
-class OfferForm(forms.ModelForm):
-    
-    offerName = forms.CharField(
-        label='',
-        widget=forms.Textarea(attrs={
-            'rows': '1',
-            'placeholder': 'Offer Name'
-        })
-    )
-    
-       
-    
-    offerDescription = forms.CharField(
-        label='',
-        widget=forms.Textarea(attrs={
-            'rows': '3',
-            'placeholder': 'Create an offer'
-        })
-    )
 
-    offerDate = forms.DateTimeField(
-        input_formats=['%Y-%m-%d %H:%M:%S'],
-        widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M:%S'),
-    )
-    
-    offerCapacity = forms.IntegerField(
-    )
-
+class OfferForm(ModelForm):
     class Meta:
         model = Offer
-        fields = ['offerName','offerDescription', 'offerDate' ,'offerCapacity']
-
+        fields = ['offerName','offerDescription', 'offerDate','offerTime','offerDuration','offerCapacity','offerLocation']
+        widgets = { 
+            'offerName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Name'}),
+            'offerDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Offer Description'}), 
+            'offerDate': DateInput(attrs={'type': 'date'}),
+            'offerTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
+            'offerDuration': forms.NumberInput(),
+            'offerLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Location'}),
+        }
+        
+        
 
 class EventForm(forms.ModelForm):
-    eventName = forms.CharField(
-        label='',
-        widget=forms.Textarea(attrs={
-            'rows': '3',
-            'placeholder': 'Event name'
-        })
-    )
-
-    eventDescription = forms.CharField(
-        label='',
-        widget=forms.Textarea(attrs={
-            'rows': '3',
-            'placeholder': 'Event description'
-        })
-    )
-
-    eventDate = forms.DateTimeField(
-        input_formats=['%Y-%m-%d %H:%M'],
-        widget=forms.DateTimeInput(
-            format='%Y-%m-%d %H:%M'),
-    )
-
-    eventCapacity = forms.IntegerField(
-    )
-
     class Meta:
         model = Event
-        fields = ['eventName', 'eventDescription', 'eventDate', 'eventLocation', 'eventCapacity']
+        fields = ['eventName','eventDescription', 'eventDate','eventTime','eventCapacity','eventLocation']
+        widgets = { 
+            'eventName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event Name'}),
+            'eventDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Event Description'}), 
+            'eventDate': DateInput(attrs={'type': 'date'}),
+            'eventTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
+            'eventCapacity': forms.NumberInput(),
+            'eventLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event City'}),
+        }
+        
 
 
-class FeedbackForm(forms.ModelForm):
-    feedback = forms.CharField(
+
+class ReviewForm(forms.ModelForm):
+    review = forms.CharField(
         label='',
         widget=forms.Textarea(
             attrs={'rows': '3',
-                   'placeholder': 'Give Feedback'}
+                   'placeholder': 'Give Review'}
         ))
 
     class Meta:
-        model = Feedback
-        fields = ['feedback']
+        model = Review
+        fields = ['review']
+
+class OfferApplicationForm(forms.ModelForm):    
+
+    class Meta:
+        model = OfferApplication
+        fields = []
