@@ -15,26 +15,109 @@
           <a href="{% url 'offer-delete' offer.pk %}" style="color: rgb(245, 10, 10);">Delete</a>
         </span>
         {% endif %}
-      </div> 
+    </div> 
 
-
-      <div class="card-body">
+    <div class="card-body">
         <h5>  </h5>
-        
-        <p class="card-text"></p>
+      <p class="card-text"></p>
+      <img src="{{ offer.offerpicture.url }}" width="100" height="100" />
+      <p><strong>Hosted by {{offer.offerOwner}}</strong></p>
+      <p>Description: {{ offer.offerDescription }}</p>
+      <p>Location: {{ offer.offerLocation }}</p>
+      <p>Date: {{ offer.offerDate }}</p>
+      <p>Time: {{ offer.offerTime }}</p>
+      <p>Event Capacity: {{ offer.offerCapacity }}</p>
+    </div>
+   
 
-              <img src="{{ offer.offerpicture.url }}" width="100" height="100" />
-              <p><strong>Hosted by {{offer.offerOwner}}</strong></p>
-              <p>Description: {{ offer.offerDescription }}</p>
-              <p>Location: {{ offer.offerLocation }}</p>
-              <p>Date: {{ offer.offerDate }}</p>
-              <p>Time: {{ offer.offerTime }}</p>
-              <p>Event Capacity: {{ offer.offerCapacity }}</p>
-        </div>
+    <div class="row justify-content-center mt-3 mb-5">
+      <p><a style="font-weight: bolder;">Accepted Participant Count: </a>{{ number_of_accepted }}</p>
+      {% if offer.offerOwner == request.user %}
+          <p></p>
+          <p style="font-weight: bolder;">Applicants:</p>
+          {% for application_done in applications %}
+          <div class="row justify-content-center">
+              <div class="border-bottom">
+                  <strong>{{ application_done.applicant }}</strong> applied on {{ application_done.date }}  
+                  {% if is_active %}
+                      {% if application_done.approved %}
+                          <a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-danger">Remove</a>
+                      {% else %}
+                          {% if offer.offerCapacity ==  number_of_accepted %}
+                          {% else %}
+                              <a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-success">Approve</a>
+                          {% endif %}
+                      {% endif %}
+                  {% endif %}
               </div>
-      </div>
+          </div>
+          {% endfor %}
+
+          {% if is_active == False %}  
+              {% if number_of_accepted > 0 %} 
+                  {% if offer.is_given == False %}
+                      <form method="POST" action="{% url 'confirm-offer-given' offer.pk %}">
+                          {% csrf_token %}
+                          <div class="d-grid gap-2">
+                              <button class="btn btn-success mt-3" type=submit>Confirm Service Given</button>
+                          </div>
+                      </form>
+                  {% else %}
+                      <p></p>
+                      <p>You confirmed application is given.</p>
+                  {% endif %}
+              {% endif %}
+          {% endif %}
+
+      {% else %}
+          {% if is_applied %}
+              {% if is_accepted %}
+                  <p>Your application is accepted.</p>
+
+                  {% if is_active == False %}
+                      {% if offer.is_taken == False %}
+                          <form method="POST" action="{% url 'confirm-offer-taken' offer.pk %}">
+                              {% csrf_token %}
+                              <div class="d-grid gap-2">
+                                  <button class="btn btn-success mt-3" type=submit>Confirm Service Taken</button>
+                              </div>
+                          </form>
+                      {% else %}
+                          <p>You confirmed application is taken.</p>
+                      {% endif %}
+                  {% endif %}
+
+              {% else %}
+                  <p>Your application is not accepted yet.</p>
+              {% endif %}
+              {% if is_active %}
+                  {% for application in applications_this %}
+                      <div class="d-grid gap-2">
+                          <a class="btn btn-danger mt-3" href="{% url 'application-delete' offer.pk application.pk %}">Cancel Application</a>
+                      </div>
+                  {% endfor %}
+              {% endif %}
+          {% else %}
+              <form method="POST">
+                  {% csrf_token %}
+                  {{ form | crispy}}
+                  {% if is_active %}
+                      <div class="d-grid gap-2">
+                          <button class="btn btn-success mt-3">Apply</button>
+                      </div>
+                  {% endif %}
+              </form>
+          {% endif %}
+      {% endif %}
   </div>
 </div>
+</div>
+
+    
+  </div>
+</div>
+
+
 
 {% endblock content %}
 
