@@ -18,6 +18,7 @@
                     <p>Description: {{ event.eventDescription }}</p>
                     <p>Location: {{ event.eventLocation }}</p>
                     <p>Date: {{ event.eventDate }}</p>
+                    <p>Duration: {{ event.eventDuration }}</p>
                     <p>Time: {{ event.eventtime }}</p>
                     <p>Event Capacity: {{ event.eventCapacity }}</p>
                     <a href="{% url 'event-detail' event.pk %}" class="stretched-link"></a>
