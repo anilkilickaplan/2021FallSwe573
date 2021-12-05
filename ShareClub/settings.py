@@ -58,6 +58,8 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'django_static_fontawesome',
+    'corsheaders',
+    
 ]
 
 SITE_ID = 1
@@ -70,7 +72,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
+    'corsheaders.middleware.CorsMiddleware',
+    'django.middleware.common.CommonMiddleware']
 
 ROOT_URLCONF = 'ShareClub.urls'
 
@@ -102,7 +105,8 @@ DATABASES = {
         'NAME': env('DB_NAME', default='DevShareclub'), 
         'USER': env('DB_USER', default='postgres'), 
         'PASSWORD': env('DB_PASSWORD', default='q1w2e3'),
-        'HOST': env('DB_HOST', default='127.0.0.1'), 
+        #'HOST': env('DB_HOST', default='127.0.0.1'), 
+        'HOST': env('DB_HOST'), 
         'PORT': env('DB_PORT', default='5432'),
     }
 }
