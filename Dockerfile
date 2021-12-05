@@ -3,8 +3,10 @@ FROM python:3.10.0-alpine3.15
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 
+
 WORKDIR /SWE573PROJECT-MAIN
 
+EXPOSE 8000
 
 # Pillow dependencies
 RUN apk add --no-cache jpeg-dev zlib-dev
@@ -26,3 +28,5 @@ RUN pip install -r requirements.txt
 
 # copy project
 COPY . .
+
+CMD python manage.py makemigrations; python manage.py migrate; python manage.py runserver 0.0.0.0:8000
