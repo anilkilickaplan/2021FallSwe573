@@ -1,4 +1,4 @@
 env
-venv
+myvenv
 .dockerignore
 Dockerfile
