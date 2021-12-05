@@ -1,7 +1,7 @@
 # Environments
 .myvenv
 myvenv/
-.env
+.env/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -30,3 +30,4 @@ share/python-wheels/
 *.egg
 
 /
+
