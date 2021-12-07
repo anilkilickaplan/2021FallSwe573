@@ -19,15 +19,15 @@ services:
    build: .
    restart: always
    env_file: ./ShareClub/.env
-   #command: python manage.py runserver 0.0.0.0:8000
+   command: >
+      sh -c "gunicorn ShareClub.wsgi:application --bind 0.0.0.0:8000"
    volumes:
      - .:/ShareClub
      - static_volume:/ShareClub/static
-   depends_on:
-     - db 
    ports:
      - 8000:8000
-  
+   depends_on:
+     - db   
 
   db:
     container_name: core_db
