@@ -59,7 +59,7 @@
                       <form method="POST" action="{% url 'confirm-offer-given' offer.pk %}">
                           {% csrf_token %}
                           <div class="d-grid gap-2">
-                              <button class="btn btn-success mt-3" type=submit>Confirm Service Given</button>
+                              <button class="btn btn-success mt-3" type=submit>Confirm Offer Given</button>
                           </div>
                       </form>
                   {% else %}
@@ -79,7 +79,7 @@
                           <form method="POST" action="{% url 'confirm-offer-taken' offer.pk %}">
                               {% csrf_token %}
                               <div class="d-grid gap-2">
-                                  <button class="btn btn-success mt-3" type=submit>Confirm Service Taken</button>
+                                  <button class="btn btn-success mt-3" type=submit>Confirm Offer Taken</button>
                               </div>
                           </form>
                       {% else %}
