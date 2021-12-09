@@ -49,7 +49,7 @@ class Migration(migrations.Migration):
                 ('feedback', models.TextField()),
                 ('createddate', models.DateTimeField(default=django.utils.timezone.now)),
                 ('creater', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL)),
-                ('service', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='MyClub.Offer')),
+                ('service', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='myclub.Offer')),
             ],
         ),
         migrations.CreateModel(
