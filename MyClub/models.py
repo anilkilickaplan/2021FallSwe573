@@ -29,7 +29,7 @@ class Event(models.Model):
     eventDate = models.DateField(default=timezone.now)
     eventTime = models.TimeField(default=timezone.now)
     eventDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
-    eventCapacity = models.IntegerField()
+    eventCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     eventIsActive = models.BooleanField(default=True)
 
 

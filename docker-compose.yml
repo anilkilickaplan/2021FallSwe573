@@ -1,33 +1,33 @@
 version: '3.8'
  
 services:
-  nginx:
-    container_name: core_web
-    restart: on-failure
-    image: nginx:stable
-    volumes:
-      - nginx_secrets:/etc/letsencrypt
-      - ./nginx/user_conf.d:/etc/nginx/user_conf.d
-    ports:
-      - "80:80"
-      - "443:443"
+  # nginx:
+  #   container_name: core_web
+  #   restart: on-failure
+  #   image: nginx:stable
+  #   volumes:
+  #     - nginx_secrets:/etc/letsencrypt
+  #     - ./nginx/user_conf.d:/etc/nginx/user_conf.d
+  #   ports:
+  #     - "80:80"
+  #     - "443:443"
 
-    depends_on:
-      - web
+  #   depends_on:
+  #     - web
   web:
    container_name: core_shareclub
    build: .
    restart: always
    env_file: ./ShareClub/.env
-   #command: python manage.py runserver 0.0.0.0:8000
+  #  command: >
+  #     sh -c "gunicorn ShareClub.wsgi:application --bind 0.0.0.0:8000"
    volumes:
      - .:/ShareClub
      - static_volume:/ShareClub/static
    depends_on:
-     - db 
+     - db   
    ports:
-     - 8000:8000
-  
+     - 80:8000
 
   db:
     container_name: core_db
