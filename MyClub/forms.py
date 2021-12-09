@@ -15,6 +15,7 @@ class OfferForm(ModelForm):
             'offerDate': DateInput(attrs={'type': 'date'}),
             'offerTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
             'offerDuration': forms.NumberInput(),
+            'offerCapacity': forms.NumberInput(),
             'offerLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Location'}),
         }
         

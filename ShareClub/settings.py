@@ -30,8 +30,8 @@ SECRET_KEY = env('DJANGO_SECRET_KEY', default = 'm!rockf+snbas+3$6iwo#54&x@&@rw7
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DJANGO_DEBUG', default=True)
 
-ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS").split(" ")
-
+# ALLOWED_HOSTS = env("DJANGO_ALLOWED_HOSTS").split(" ")
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -52,7 +52,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'landing',
-    'MyClub',
+    'myclub',
     'crispy_forms',
     'allauth',
     'allauth.account',
@@ -110,7 +110,8 @@ DATABASES = {
         'PORT': env('DB_PORT', default='5432'),
     }
 }
-CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS").split(" ")
+#CORS_ALLOWED_ORIGINS = env("CORS_ALLOWED_ORIGINS").split(" ")
+CORS_ALLOW_ALL_ORIGINS = True
 
 # DATABASES = {
 #     'default': env.db()
