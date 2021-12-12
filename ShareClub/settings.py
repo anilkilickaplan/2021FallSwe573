@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django_static_fontawesome',
     'corsheaders',
     
+    
 ]
 
 SITE_ID = 1
