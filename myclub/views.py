@@ -7,10 +7,12 @@ from django.views import View, generic
 from .models import Offer, OfferApplication, UserProfile, Event, Review
 from .forms import OfferApplicationForm, OfferForm, EventForm, ReviewForm
 from django.views.generic.edit import UpdateView, DeleteView
-from datetime import datetime
+from datetime import datetime, timezone
 from django.http import HttpResponseRedirect, request
 from django.contrib import  messages
 from django.shortcuts import render, redirect, get_object_or_404
+from django.utils import timezone
+
 
 
 
@@ -61,6 +63,11 @@ class OfferDetailView(View):
         applications = OfferApplication.objects.filter(appliedOffer=pk).order_by('-applicationDate')
         applications_this = applications.filter(applicant=request.user)
         number_of_accepted = len(applications.filter(isApproved=True))
+        accepted_applications = applications.filter(isApproved=True)
+        application_number = len(applications)
+        is_active = True
+        if offer.offerDate <= timezone.now():
+            is_active = False
         if len(applications) == 0:
             is_applied = False
             is_accepted = False
@@ -80,6 +87,9 @@ class OfferDetailView(View):
             'is_applied': is_applied,
             'applications_this': applications_this,
             'is_accepted': is_accepted,
+            'is_active': is_active,
+            'application_number': application_number,
+            'accepted_applications': accepted_applications
         }
 
         return render(request, 'myclub/offer_detail.html', context)
@@ -107,6 +117,7 @@ class OfferDetailView(View):
                 new_application.offer = offer
                 new_application.isApproved = False
                 new_application.save()
+                messages.success(request, 'Offer created')
 
         context = {
             'offer': offer,
@@ -124,12 +135,19 @@ class OfferEditView(LoginRequiredMixin, View):
     def get(self, request, *args, pk, **kwargs):
         offer = Offer.objects.get(pk=pk)
 
-        form = OfferForm(instance= offer)
-        context = {
-            'form': form,
-        }
+        if offer.creater == request.user:
+            if offer.servicedate > timezone.now():
 
-        return render(request, 'myclub/offer_edit.html', context)
+                form = OfferForm(instance= offer)
+                context = {
+                    'form': form,
+                }
+
+                return render(request, 'myclub/offer_edit.html', context)
+            else:
+                return redirect('offer-detail', pk=offer.pk)
+        else:
+            return redirect('offer-detail', pk=offer.pk)
 
     def post(self, request, *args, **kwargs):
         form = OfferForm(request.POST)
@@ -390,3 +408,33 @@ class ApplicationEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         application = self.get_object()
         return self.request.user == application.offer.offerOwner
+
+class ConfirmOfferTaken(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        offer = Offer.objects.get(pk=pk)
+        offer.is_taken = True
+        offer.save()
+        CreditExchange(offer)
+        return redirect('offer-detail', pk=pk)
+class ConfirmServiceGiven(LoginRequiredMixin, View):
+    def post(self, request, pk, *args, **kwargs):
+        offer = Offer.objects.get(pk=pk)
+        offer.is_given = True
+        offer.save()
+        CreditExchange(offer)
+        return redirect('offer-detail', pk=pk)
+
+def CreditExchange(offer):
+    applications = OfferApplication.objects.filter(offer=offer.pk).filter(approved=True)
+    if offer.is_taken == True:
+        if offer.is_given == True:
+            offer_giver = UserProfile.objects.get(pk=offer.offerOwner.pk)
+            offer_giver.userCredits = offer_giver.userCredits + offer.offerDuration
+            offer_giver.userReservehour = offer_giver.userReservehour - offer.offerDuration
+            offer_giver.save()
+            for application in applications:
+                offer_taker = UserProfile.objects.get(pk=application.applicant.pk)
+                offer_taker.userCredits = offer_taker.userCredits - offer.offerDuration
+                offer_taker.userReservehour = offer_taker.userReservehour + offer.offerDuration
+                offer_taker.save()
+    return redirect('offer-detail', pk=offer.pk)
