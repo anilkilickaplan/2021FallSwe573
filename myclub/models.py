@@ -13,11 +13,13 @@ class Offer(models.Model):
     offerDescription = models.TextField()
     offerName = models.TextField()
     offerDate = models.DateField(default=timezone.now)
-    offerTime = models.TimeField(default=timezone.now)
+    offerTime = models.TimeField(null=False,default=timezone.now)
     offerDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
     offerLocation = models.CharField(max_length=100, blank=True, null=True)
     offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     offerIsActive = models.BooleanField(default=True)
+    is_taken = models.BooleanField(default=False)
+
     
 
 class Event(models.Model):
@@ -53,6 +55,7 @@ class UserProfile(models.Model):
     userBirthDate = models.DateField(null=True, blank=True)
     userLocation = models.CharField(max_length=100, blank=True, null=True)
     userCredits=models.IntegerField(default=5)
+    userReservehour = models.IntegerField(default=0)
     userPicture = models.ImageField(upload_to='uploads/profile_pictures/', default='uploads/profile_pictures/default.png', blank=True)
     userFollowers = models.ManyToManyField(User, blank=True, related_name='userfollowers')
 

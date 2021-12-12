@@ -38,9 +38,9 @@
           {% for application_done in applications %}
           <div class="row justify-content-center">
               <div class="border-bottom">
-                  <strong>{{ application_done.applicant }}</strong> applied on {{ application_done.date }}  
+                  <strong>{{ application_done.applicant }}</strong> applied on {{ application_done.applicationDate }}  
                   {% if is_active %}
-                      {% if application_done.approved %}
+                      {% if application_done.isApproved %}
                           <a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-danger">Remove</a>
                       {% else %}
                           {% if offer.offerCapacity ==  number_of_accepted %}
@@ -114,9 +114,6 @@
 </div>
 
     
-  </div>
-</div>
-
 
 
 {% endblock content %}
