@@ -1,7 +1,8 @@
 from django import forms
 from django.forms import ModelForm
 from .models import Offer, Event, OfferApplication, Review
-from django.forms.widgets import DateInput, TimeInput
+from django.forms.widgets import DateInput, SelectDateWidget, TimeInput
+
 
 
 
@@ -30,6 +31,7 @@ class EventForm(forms.ModelForm):
             'eventDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Event Description'}), 
             'eventDate': DateInput(attrs={'type': 'date'}),
             'eventTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
+            #'eventTime': forms.TimeField(widget=SelectDateWidget(minute_step=10, second_step=10)), (https://bradmontgomery.net/blog/selecttimewidget-a-custom-django-widget/)
             'eventCapacity': forms.NumberInput(),
             'eventLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event City'}),
         }

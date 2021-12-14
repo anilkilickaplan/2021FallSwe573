@@ -42,7 +42,7 @@ class OfferApplication(models.Model):
     applicationDate = models.DateTimeField(default=timezone.now)
     applicant = models.ForeignKey(User, on_delete=models.CASCADE)
     appliedOffer= models.ForeignKey('Offer', on_delete=models.CASCADE)
-    isApproved = models.BooleanField(default=True)
+    isApproved = models.BooleanField(default=False)
 
 class Review(models.Model):
     review = models.TextField()

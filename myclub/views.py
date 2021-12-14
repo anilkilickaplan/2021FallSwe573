@@ -14,9 +14,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
 
-
-
-
 # OFFER RELATED 
 class OfferListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -29,7 +26,6 @@ class OfferListView(LoginRequiredMixin, View):
         }
 
         return render(request, 'myclub/offer_list.html', context)
-
     
 class OfferCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -52,7 +48,6 @@ class OfferCreateView(LoginRequiredMixin, View):
 
 
         return redirect('offer-list')
-
 
 class OfferDetailView(View):
     def get(self, request, pk, *args, **kwargs):
@@ -130,7 +125,6 @@ class OfferDetailView(View):
 
         return redirect('offer-detail', pk=offer.pk) 
 
-  
 class OfferEditView(LoginRequiredMixin, View):
     def get(self, request, *args, pk, **kwargs):
         offer = Offer.objects.get(pk=pk)
@@ -160,8 +154,6 @@ class OfferEditView(LoginRequiredMixin, View):
 
         return redirect('offer-list')
     
-
-
 class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Offer
     template_name = 'myclub/offer_delete.html'
@@ -416,6 +408,7 @@ class ConfirmOfferTaken(LoginRequiredMixin, View):
         offer.save()
         CreditExchange(offer)
         return redirect('offer-detail', pk=pk)
+
 class ConfirmOfferGiven(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         offer = Offer.objects.get(pk=pk)
