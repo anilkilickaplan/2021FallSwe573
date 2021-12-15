@@ -62,6 +62,7 @@ class UserProfile(models.Model):
     userReservehour = models.IntegerField(default=0)
     userPicture = models.ImageField(upload_to='uploads/profile_pictures/', default='uploads/profile_pictures/default.png', blank=True)
     userFollowers = models.ManyToManyField(User, blank=True, related_name='userfollowers')
+    userCredibility = models.IntegerField(null= True)
 
 #class OfferAttendees(models.Model):
 

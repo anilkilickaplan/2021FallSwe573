@@ -96,6 +96,8 @@ class OfferDetailView(View):
         applications = OfferApplication.objects.filter(appliedOffer=pk).order_by('-applicationDate')
         applications_this = applications.filter(applicant=request.user)
         number_of_accepted = len(applications.filter(isApproved=True))
+        applicant_user_profile = UserProfile.objects.get(pk=request.user)
+   
         if len(applications) == 0:
             is_applied = False
         for application in applications:
@@ -106,13 +108,20 @@ class OfferDetailView(View):
                 is_applied = False
 
         if form.is_valid():
+
             if is_applied == False:
-                new_application = form.save(commit=False)
-                new_application.applicant = request.user
-                new_application.appliedOffer = offer
-                new_application.isApproved = False
-                new_application.save()
-                messages.success(request, 'Offer created')
+                totalcredit = applicant_user_profile.userReservehour + applicant_user_profile.userCredits
+                if totalcredit > offer.offerDuration:
+                    new_application = form.save(commit=False)
+                    new_application.applicant = request.user
+                    new_application.appliedOffer = offer
+                    new_application.isApproved = False
+                    new_application.save()
+                    applicant_user_profile.UserReservehour = applicant_user_profile.userReservehour - offer.offerDuration
+                    applicant_user_profile.save()
+                    messages.success(request, 'Offer created')
+                else:
+                    messages.warning(request, 'Insufficient credit')
 
         context = {
             'offer': offer,
@@ -129,7 +138,7 @@ class OfferEditView(LoginRequiredMixin, View):
     def get(self, request, *args, pk, **kwargs):
         offer = Offer.objects.get(pk=pk)
 
-        if offer.creater == request.user:
+        if offer.offerOwner == request.user:
             if offer.offerDate > timezone.now().date():
 
                 form = OfferForm(instance= offer)
