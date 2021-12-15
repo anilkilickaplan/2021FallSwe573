@@ -20,11 +20,15 @@
                     {% endif %}
                     </span>
                 </span>
-                <img src="{{ profile.picture.url }}" class="rounded-circle" width="100" height="100" />
+                <img src="{{ profile.userPicture.url }}" class="rounded-circle" width="100" height="100" />
 
                 <p>Birth Location: {{ profile.userLocation }}</p>
                 <p>Birth Date: {{ profile.userBirthDate }}</p>
                 <p>{{ profile.userBio }}</p>
+                {% if request.user == user %}
+                    <p><a style="font-weight: bolder;">Credits: </a>{{ profile.userCredits }}</p>
+                {% endif %}
+
 
                 <div class="mb-3">
                 {% if number_of_followers == 0 %}

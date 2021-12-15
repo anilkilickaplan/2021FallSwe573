@@ -19,6 +19,7 @@ class Offer(models.Model):
     offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     offerIsActive = models.BooleanField(default=True)
     is_taken = models.BooleanField(default=False)
+    offerPicture = models.ImageField(upload_to='uploads/offer_pictures/', default='uploads/offer_pictures/default.png', blank=True)
 
     
 
@@ -33,13 +34,15 @@ class Event(models.Model):
     eventDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
     eventCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     eventIsActive = models.BooleanField(default=True)
+    eventPicture = models.ImageField(upload_to='uploads/event_pictures/', default='uploads/event_pictures/default.png', blank=True)
+
 
 
 class OfferApplication(models.Model):
     applicationDate = models.DateTimeField(default=timezone.now)
     applicant = models.ForeignKey(User, on_delete=models.CASCADE)
     appliedOffer= models.ForeignKey('Offer', on_delete=models.CASCADE)
-    isApproved = models.BooleanField(default=True)
+    isApproved = models.BooleanField(default=False)
 
 class Review(models.Model):
     review = models.TextField()
@@ -51,6 +54,7 @@ class Review(models.Model):
 class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True, verbose_name='user', related_name='profile',on_delete=models.CASCADE)
     userName = models.CharField(max_length=30, blank=True, null=True)
+    userSurname = models.CharField(max_length=30, blank=True, null=True)
     userBio = models.TextField(max_length=500, blank=True, null=True)
     userBirthDate = models.DateField(null=True, blank=True)
     userLocation = models.CharField(max_length=100, blank=True, null=True)

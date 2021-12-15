@@ -39,7 +39,7 @@ urlpatterns = [
     path('offer/<int:offer_pk>/application/delete/<int:pk>', views.ApplicationDeleteView.as_view(), name='application-delete'),
     path('offer/<int:offer_pk>/application/edit/<int:pk>/', views.ApplicationEditView.as_view(), name='application-edit'),
     path('offer/<int:pk>/confirmtaken/', views.ConfirmOfferTaken.as_view(), name='confirm-offer-taken'),
-    path('offer/<int:pk>/confirmgiven/', views.ConfirmOfferTaken.as_view(), name='confirm-offer-given'),
+    path('offer/<int:pk>/confirmgiven/', views.ConfirmOfferGiven.as_view(), name='confirm-offer-given'),
 
     
 

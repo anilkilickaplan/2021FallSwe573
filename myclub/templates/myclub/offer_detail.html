@@ -20,7 +20,7 @@
     <div class="card-body">
         <h5>  </h5>
       <p class="card-text"></p>
-      <img src="{{ offer.offerpicture.url }}" width="100" height="100" />
+      <img src="{{ offer.offerPicture.url }}" width="100" height="100" />
       <p><strong>Hosted by {{offer.offerOwner}}</strong></p>
       <p>Description: {{ offer.offerDescription }}</p>
       <p>Location: {{ offer.offerLocation }}</p>
@@ -103,7 +103,7 @@
                   {{ form | crispy}}
                   {% if is_active %}
                       <div class="d-grid gap-2">
-                          <button class="btn btn-success mt-3">Apply</button>
+                          <button class="btn btn-dark mt-3">Apply</button>
                       </div>
                   {% endif %}
               </form>

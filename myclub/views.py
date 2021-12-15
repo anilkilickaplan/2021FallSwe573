@@ -14,9 +14,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 
 
-
-
-
 # OFFER RELATED 
 class OfferListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -29,7 +26,6 @@ class OfferListView(LoginRequiredMixin, View):
         }
 
         return render(request, 'myclub/offer_list.html', context)
-
     
 class OfferCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -53,7 +49,6 @@ class OfferCreateView(LoginRequiredMixin, View):
 
         return redirect('offer-list')
 
-
 class OfferDetailView(View):
     def get(self, request, pk, *args, **kwargs):
         offer = Offer.objects.get(pk=pk)
@@ -66,7 +61,7 @@ class OfferDetailView(View):
         accepted_applications = applications.filter(isApproved=True)
         application_number = len(applications)
         is_active = True
-        if offer.offerDate <= timezone.now():
+        if offer.offerDate <= timezone.now().date():
             is_active = False
         if len(applications) == 0:
             is_applied = False
@@ -98,7 +93,7 @@ class OfferDetailView(View):
     def post(self, request, pk, *args, **kwargs):
         offer = Offer.objects.get(pk=pk)
         form = OfferApplicationForm(request.POST)
-        applications = OfferApplication.objects.filter(offer=pk).order_by('-applicationDate')
+        applications = OfferApplication.objects.filter(appliedOffer=pk).order_by('-applicationDate')
         applications_this = applications.filter(applicant=request.user)
         number_of_accepted = len(applications.filter(isApproved=True))
         if len(applications) == 0:
@@ -114,7 +109,7 @@ class OfferDetailView(View):
             if is_applied == False:
                 new_application = form.save(commit=False)
                 new_application.applicant = request.user
-                new_application.offer = offer
+                new_application.appliedOffer = offer
                 new_application.isApproved = False
                 new_application.save()
                 messages.success(request, 'Offer created')
@@ -128,15 +123,14 @@ class OfferDetailView(View):
             'applications_this': applications_this,
         }
 
-        return redirect('offer-detail', pk=Offer.pk) 
+        return redirect('offer-detail', pk=offer.pk) 
 
-  
 class OfferEditView(LoginRequiredMixin, View):
     def get(self, request, *args, pk, **kwargs):
         offer = Offer.objects.get(pk=pk)
 
         if offer.creater == request.user:
-            if offer.servicedate > timezone.now():
+            if offer.offerDate > timezone.now().date():
 
                 form = OfferForm(instance= offer)
                 context = {
@@ -160,8 +154,6 @@ class OfferEditView(LoginRequiredMixin, View):
 
         return redirect('offer-list')
     
-
-
 class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Offer
     template_name = 'myclub/offer_delete.html'
@@ -407,7 +399,7 @@ class ApplicationEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     
     def test_func(self):
         application = self.get_object()
-        return self.request.user == application.offer.offerOwner
+        return self.request.user == application.appliedOffer.offerOwner
 
 class ConfirmOfferTaken(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
@@ -416,7 +408,8 @@ class ConfirmOfferTaken(LoginRequiredMixin, View):
         offer.save()
         CreditExchange(offer)
         return redirect('offer-detail', pk=pk)
-class ConfirmServiceGiven(LoginRequiredMixin, View):
+
+class ConfirmOfferGiven(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         offer = Offer.objects.get(pk=pk)
         offer.is_given = True
