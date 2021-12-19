@@ -7,8 +7,8 @@
         <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 pt-3">
 
            
-                {% if profile.userName %}
-                    <h3 class="py-4">{{ profile.userName }} </h3>
+                {% if profile.user.username %}
+                    <h3 class="py-4">{{ profile.user.username }} </h3>
                 {% else %}
                     <h3 class="py-4">{{ user.userName }}</h3>
                 {% endif %}
