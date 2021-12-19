@@ -1,8 +1,8 @@
 from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import ModelForm
 from .models import Offer, Event, OfferApplication, Review
 from django.forms.widgets import DateInput, SelectDateWidget, TimeInput
-
 
 
 
@@ -19,9 +19,8 @@ class OfferForm(ModelForm):
             'offerCapacity': forms.NumberInput(),
             'offerLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Location'}),
         }
-        
-        
 
+      
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event

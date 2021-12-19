@@ -79,35 +79,70 @@
     </div>
     <div class="col-md-3">
         {% if offer.offerOwner == request.user %}
+                    <!-- Offer page attendee list for Offer Owner, can approve or remove-->
+
+        <table class="table table-hover">
+
+            <thead>
+            <tr>
+                <th scope="col" >Username</th>
+                <th scope="col" >Credibility</th>
+                <th scope="col" >Status</th>
+                <th scope="col" >Edit</th>
+            </tr>
+            </thead>
+            <tbody>
             {% for application_done in applications %}
 
-                <table class="table table-hover">
-                    <thead>
-                    <tr>
-                        <th scope="col" class="w-10">Username</th>
-                        <th scope="col" class="w-6">Credibility</th>
-                        <th scope="col" class="w-6">Status</th>
-                        <th scope="col"c lass="w-6">Edit</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>{{ application_done.applicant.Username}}</td>
-                        <td>{{ applicant.userCredibility }}</td>
-                        {% if is_active %}
-                            {% if application_done.isApproved %}
-                                <td><i class="fa-solid fa-circle-check"></i></td>
-                                <td><a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-danger">Remove</a></td>
+                <tr>
+                    <td>{{ application_done.applicant.profile.user.username}}</td>
+                    <td>{{ application_done.applicant.profile.user.usercredibility }}</td>
+                    {% if is_active %}
+                        {% if application_done.isApproved %}
+                            <td><i class="fa-solid fa-circle-check"></i></td>
+                            <td><a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-danger">Drop</a></td>
+                        {% else %}
+                            {% if offer.offerCapacity ==  number_of_accepted %}
                             {% else %}
-                                {% if offer.offerCapacity ==  number_of_accepted %}
-                                {% else %}
-                                    <td><i class="fa-solid fa-hourglass"></i></td>
-                                    <td><a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-success">Approve</a>
-                                {% endif %}
+                                <td><i class="fa-solid fa-hourglass"></i></td>
+                                <td><a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-success">Approve</a>
                             {% endif %}
                         {% endif %}
-                    </tr>
+                    {% endif %}
+                </tr>
             {% endfor %}
+        </table>
+
+        {% else %} 
+        <!-- Offer page attendee list -->
+            {% if is_active %}
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th scope="col" >Username</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                        {% for application_done in applications %}
+                            {% if application_done.isApproved %}
+
+                                <tr>
+                                    <td><img src="{{ application_done.applicant.profile.user.userPicture.url }}" 
+                                            class="rounded-circle" width="100" height="100" /></td>
+                                    <td><a class="btn btn-primary mt-3" href="{% url 'profile' application_done.applicant.profile.pk %}">
+                                        {{application_done.applicant.profile.user.username}}</a></td>
+                                </tr>
+                            {% else %}
+                            {%endif%}
+                         </table>
+
+
+                         {% endfor %}
+            {% endif %}
+
+
+
         {% endif %}
        
     </div>
