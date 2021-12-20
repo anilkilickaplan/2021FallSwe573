@@ -1,6 +1,8 @@
 {% extends 'landing/base.html' %}
 
 {% block content %}
+
+
 <div class="container">
  
     <div class="row justify-content-center mt-5">
@@ -16,7 +18,7 @@
                 <span>
                     {% if request.user == user %}
                     <span style="float:right;"> 
-                        <a href="{% url 'profile-edit' profile.pk %}" style="color: #333;">Edit</a>
+                        <a href="{% url 'profile-edit' profile.pk %}" style="color: rgb(0, 16, 233);">Edit</a>
                     {% endif %}
                     </span>
                 </span>
@@ -24,18 +26,18 @@
 
                 <p>Birth Location: {{ profile.userLocation }}</p>
                 <p>Birth Date: {{ profile.userBirthDate }}</p>
-                <p>{{ profile.userBio }}</p>
+                <p>Bio: {{ profile.userBio }}</p>
                 {% if request.user == user %}
-                    <p><a style="font-weight: bolder;">Credits: </a>{{ profile.userCredits }}</p>
+                    <p><a style="font-weight: bolder;">Your credit: </a>{{ profile.userCredits }}</p>
                 {% endif %}
 
 
-                <div class="mb-3">
+                <!-- <div class="mb-3">
                 {% if number_of_followers == 0 %}
                      <a href="#">No followers yet!</a>
                 {% else %}
                      <a href="{% url 'followers' profile.pk %}">Followers: {{ number_of_followers }}</a>
-                {% endif %}
+                {% endif %} -->
 
                
                 {% if user == request.user %}
@@ -56,4 +58,33 @@
         </div>
     </div>
 </div>
+<div class="col-md-3"> 
+    {% if number_of_followers == 0 %}
+    <a href="#">No followers yet!</a>
+    {% else %}
+        <table class="table table-hover">
+            <thead>
+            <tr>
+                <th scope="col" ></th>
+                <th scope="col" >Username</th>
+            </tr>
+            </thead>
+                {% for application_done in applications %}
+                    {% if application_done.isApproved %}
+                    <tbody>
+
+                    <tr>
+                        <td><img src="{{ application_done.applicant.profile.user.userPicture.url }}" 
+                                class="rounded-circle" width="50" height="50" /></td>
+                        <td><a class="btn btn-primary mt-3" href="{% url 'profile' application_done.applicant.profile.pk %}">
+                            {{application_done.applicant.profile.user.username}}</a></td>
+                    </tr>
+                    </tbody>
+                    {%endif%}
+                {% endfor %}
+        </table>
+
+    {% endif %}
+</div>
+
 {% endblock content %}
