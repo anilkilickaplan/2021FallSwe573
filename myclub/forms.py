@@ -5,7 +5,11 @@ from .models import Offer, Event, OfferApplication, Review
 from django.forms.widgets import DateInput, SelectDateWidget, TimeInput
 
 
-choices = [('Technology','Technology'),('Technology','Technology'),('Technology','Technology'),('Technology','Technology')]
+choices = [('Technology','Technology'),
+           ('Art','Art'),
+           ('Culinary','Culinary'),
+           ('Literature','Literature'),
+           ('Finance','Finance')]
 
 class OfferForm(forms.ModelForm):
     class Meta:
@@ -30,6 +34,7 @@ class EventForm(forms.ModelForm):
         widgets = { 
             'eventName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event Name'}),
             'eventDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Event Description'}), 
+            'eventCategory':forms.Select(choices= choices, attrs={'class': 'form-control'}),
             'eventDate': DateInput(attrs={'type': 'date'}),
             'eventTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
             #'eventTime': forms.TimeField(widget=SelectDateWidget(minute_step=10, second_step=10)), (https://bradmontgomery.net/blog/selecttimewidget-a-custom-django-widget/)

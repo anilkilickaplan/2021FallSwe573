@@ -35,6 +35,8 @@ class Event(models.Model):
     eventCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     eventIsActive = models.BooleanField(default=True)
     eventPicture = models.ImageField(upload_to='uploads/event_pictures/', default='uploads/event_pictures/default.png', blank=True)
+    eventCategory = models.TextField(max_length=100,blank=True)
+
     
 class OfferApplication(models.Model):
     applicationDate = models.DateTimeField(default=timezone.now)
