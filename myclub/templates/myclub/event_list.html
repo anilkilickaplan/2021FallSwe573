@@ -5,9 +5,11 @@
 
 <div class="d-flex justify-content-center">
 
-        <button type="button" class="btn btn-primary btn-lg">Events List</button>
-        <button type="button" class="btn btn-secondary btn-lg">Go to Offers</button>
+        <a class="btn btn-primary" href="#" role="button">Events</a>
+        <a class="btn btn-secondary" href="{% url 'offer-list'%}" role="button">Go to Offers</a>
 </div>      
+
+<div class="row justify-content-center mt-3">
 
     {% for event in event_list %}
     <div class="row justify-content-center mt-3">
