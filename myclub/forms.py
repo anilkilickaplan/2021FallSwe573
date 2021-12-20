@@ -1,8 +1,6 @@
 from django import forms
-from django.core.exceptions import ValidationError
-from django.forms import ModelForm
 from .models import Offer, Event, OfferApplication, Review
-from django.forms.widgets import DateInput, SelectDateWidget, TimeInput
+from django.forms.widgets import DateInput, TimeInput
 
 
 choices = [('Technology','Technology'),
@@ -30,7 +28,7 @@ class OfferForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['eventPicture','eventName','eventDescription', 'eventDate','eventTime','eventCapacity','eventLocation']
+        fields = ['eventPicture','eventName','eventDescription', 'eventCategory','eventDate','eventTime','eventCapacity','eventLocation']
         widgets = { 
             'eventName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event Name'}),
             'eventDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Event Description'}), 

@@ -2,8 +2,13 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+<div class="d-flex justify-content-center">
 
-        {% for offer in offer_list %}
+    <button type="button" class="btn btn-primary btn-lg">Offer List</button>
+    <button type="button" class="btn btn-secondary btn-lg">Go to Events</button>
+</div>      
+
+{% for offer in offer_list %}
         <div class="row justify-content-center mt-3">
             <div class="card" style="width: 50rem;">
                 <div class="card-header"> Offer </div> 
@@ -16,12 +21,16 @@
                             <div class="col-md-15 col-sm-12 border-bottom position-relative">
                                 <img src="{{ offer.offerPicture.url }}" class="rounded-circle" width="100" height="100" />
                                 <p><strong>Hosted by {{offer.offerOwner}}</strong></p>
+                                {% if offer.offerCategory != ""%}
+                                    <p>Category: {{offer.offerCategory}} </p>
+                                {% else %}
+                                {% endif %}
                                 <p>Description: {{ offer.offerDescription }}</p>
                                 <p>Location: {{ offer.offerLocation }}</p>
                                 <p>Date: {{ offer.offerDate }}</p>
                                 <p>Time: {{ offer.offerTime }}</p>
                                 <p>Duration: {{ offer.offerDuration }}</p>
-                                <p>Event Capacity: {{ offer.offerCapacity }}</p>
+                                <!-- <p>Event Capacity: {{ offer.offerCapacity }}</p> -->
                                 
                                 <a href="{% url 'offer-detail' offer.pk %}" class="stretched-link"></a>
                             </div>
