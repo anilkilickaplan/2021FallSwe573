@@ -38,7 +38,7 @@ class OfferCreateView(LoginRequiredMixin, View):
         return render(request, 'myclub/create_offer.html', context)
 
     def post(self, request, *args, **kwargs):
-        form = OfferForm(request.POST)
+        form = OfferForm(request.POST, request.FILES)
 
         if form.is_valid():
             new_offer = form.save(commit=False)
