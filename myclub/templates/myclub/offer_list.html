@@ -2,8 +2,77 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+</br></br></br></br>
 
-        {% for offer in offer_list %}
+<div class="d-flex justify-content-center">
+
+    <a class="btn btn-primary" href="#" role="button">Offers</a>
+    <a class="btn btn-secondary" href="{% url 'event-list'%}" role="button">Go to Events</a>
+</div>      
+
+</br>
+<div class="col-md-3">
+    <div class="form-floating">
+        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+          <option selected>Choose a category</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+        <label for="floatingSelect">Choose category</label>
+      </div>
+    </br>
+
+      <div class="form-floating">
+        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+          <option selected>Choose city</option>
+          <option value="1">One</option>
+          <option value="2">Two</option>
+          <option value="3">Three</option>
+        </select>
+        <label for="floatingSelect">Choose city</label>
+      </div>
+</div>
+
+<div class="col-md-7">
+    <div class="card mb-3" style="width: 40em;">
+
+
+            {% for offer in offer_list %}
+            <div class="col">
+
+                <div class="card">
+                    <img src="{{ offer.offerPicture.url }}" class="rounded-circle" width="100" height="100" />
+                    <div class="card-body">
+                        <h5 class="card-title">{{ offer.offerName }}</h5>
+                        <p class><strong>Hosted by {{offer.offerOwner}}</strong></p>
+                        {% if offer.offerCategory != ""%}
+                            <p class>Category: {{offer.offerCategory}} </p>
+                        {% else %}
+                        {% endif %}
+                        <!-- <p class="card-text">Description: {{ offer.offerDescription }}</p> -->
+                        <p class="card-text">Location: {{ offer.offerLocation }}</p>
+                        <p class="card-text">Date: {{ offer.offerDate }}</p>
+                        <p class="card-text">Time: {{ offer.offerTime }}</p>
+                        <p class="card-text">Duration: {{ offer.offerDuration }}</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                        <a href="{% url 'offer-detail' offer.pk %}" class="stretched-link"></a>
+                    </div>
+                </div>
+            </div>
+
+            {% endfor %}
+    </div>
+</div>
+
+<div class="col-md-3">
+
+</div>
+
+
+{% endblock %}
+
+<!-- {% for offer in offer_list %}
         <div class="row justify-content-center mt-3">
             <div class="card" style="width: 50rem;">
                 <div class="card-header"> Offer </div> 
@@ -16,14 +85,18 @@
                             <div class="col-md-15 col-sm-12 border-bottom position-relative">
                                 <img src="{{ offer.offerPicture.url }}" class="rounded-circle" width="100" height="100" />
                                 <p><strong>Hosted by {{offer.offerOwner}}</strong></p>
+                                {% if offer.offerCategory != ""%}
+                                    <p>Category: {{offer.offerCategory}} </p>
+                                {% else %}
+                                {% endif %}
                                 <p>Description: {{ offer.offerDescription }}</p>
                                 <p>Location: {{ offer.offerLocation }}</p>
                                 <p>Date: {{ offer.offerDate }}</p>
                                 <p>Time: {{ offer.offerTime }}</p>
                                 <p>Duration: {{ offer.offerDuration }}</p>
-                                <p>Event Capacity: {{ offer.offerCapacity }}</p>
+                                <p>Event Capacity: {{ offer.offerCapacity }}</p> -->
                                 
-                                <a href="{% url 'offer-detail' offer.pk %}" class="stretched-link"></a>
+                                <!-- <a href="{% url 'offer-detail' offer.pk %}" class="stretched-link"></a>
                             </div>
                         </div>
                 </div>
@@ -31,5 +104,4 @@
         </div>
         {% endfor %}
     <br/>
-{% endblock %}
-
+ --> 

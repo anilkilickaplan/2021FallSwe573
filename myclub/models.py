@@ -19,8 +19,8 @@ class Offer(models.Model):
     offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     offerIsActive = models.BooleanField(default=True)
     is_taken = models.BooleanField(default=False)
-    offerPicture = models.ImageField(upload_to='uploads/offer_pictures/', default='uploads/offer_pictures/default.png', blank=True)
-
+    offerPicture = models.ImageField(upload_to='uploads/offer_pictures/',default='uploads/offer_pictures/default.png', blank=True)
+    offerCategory = models.TextField(max_length=100,blank=True)
     
 
 class Event(models.Model):
@@ -35,9 +35,9 @@ class Event(models.Model):
     eventCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     eventIsActive = models.BooleanField(default=True)
     eventPicture = models.ImageField(upload_to='uploads/event_pictures/', default='uploads/event_pictures/default.png', blank=True)
+    eventCategory = models.TextField(max_length=100,blank=True)
 
-
-
+    
 class OfferApplication(models.Model):
     applicationDate = models.DateTimeField(default=timezone.now)
     applicant = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -49,7 +49,6 @@ class Review(models.Model):
     createddate = models.DateTimeField(default=timezone.now)
     reviewOffer = models.ForeignKey('Offer', on_delete=models.CASCADE)
     reviewOwner = models.ForeignKey(User, on_delete=models.CASCADE)
-
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, primary_key=True, verbose_name='user', related_name='profile',on_delete=models.CASCADE)
