@@ -29,6 +29,7 @@
             <img class="img-fluid rounded" src="{{offer.offerPicture.url}}" alt="" width="400" height="200">
 
             <p><strong>Hosted by {{offer.offerOwner}}</strong></p>
+            <p>Duration: {{ offer.offerDuration }}</p>
             <p>Description: {{ offer.offerDescription }}</p>
             <p>Location: {{ offer.offerLocation }}</p>
             <p>Date: {{ offer.offerDate }}</p>
@@ -91,32 +92,30 @@
             <thead>
             <tr>
                 <th scope="col" >Username</th>
-                <th scope="col" >Credibility</th>
+                <!-- <th scope="col" >Credibility</th> -->
                 <th scope="col" >Status</th>
-                <th scope="col" >Edit</th>
+                <!-- <th scope="col" >Edit</th> -->
             </tr>
             </thead>
                 {% for application_done in applications %}
                 <tbody>
-
                     <tr>
                         <td>{{ application_done.applicant.profile.user.username}}</td>
-                        <td>{{ application_done.applicant.profile.user.usercredibility }}</td>
+                        <!-- <td>{{ application_done.applicant.profile.user.usercredibility }}</td> -->
                         {% if is_active %}
                             {% if application_done.isApproved %}
-                                <td><i class="fa-solid fa-circle-check"></i></td>
-                                <td><a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-danger">Drop</a></td>
+                                <td><i class="fa-solid fa-circle-check"></i>Approved</td>
+                                <!-- <td><a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-danger">Drop</a></td> -->
                             {% else %}
                                 {% if offer.offerCapacity ==  number_of_accepted %}
                                 {% else %}
-                                    <td><i class="fa-solid fa-hourglass"></i></td>
-                                    <td><a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-success">Approve</a>
+                                    <!-- <td><i class="fa-solid fa-hourglass"></i></td> -->
+                                    <td class="table-warning"><a href="{% url 'application-edit' offer.pk application_done.pk %}" class="btn btn-success">Approve</a>
                                 {% endif %}
                             {% endif %}
                         {% endif %}
                     </tr>
                 </tbody>
-
                 {% endfor %}
 
         </table>
@@ -134,7 +133,6 @@
                                 {% for application_done in applications %}
                                     {% if application_done.isApproved %}
                                     <tbody>
-
                                     <tr>
                                         <td><img src="{{ application_done.applicant.profile.user.userPicture.url }}" 
                                                 class="rounded-circle" width="50" height="50" /></td>

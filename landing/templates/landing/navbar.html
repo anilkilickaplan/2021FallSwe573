@@ -32,17 +32,19 @@
                 </li> 
               </ul>
 
-              <form class="d-flex">
+              <!-- <form class="d-flex">
                 <div class="input-group">
-                    <!--<span class="input-group-text" id="basic-addon1">@</span>-->
+                    <span class="input-group-text" id="basic-addon1">@</span>
                     <input type="text" class="form-control" placeholder="Search for keywords" 
                     aria-label="Username" aria-describedby="basic-addon1">
                 </div>
-              </form>
+              </form> -->
 
               <div class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle text-dark" data-bs-toggle="dropdown" 
                     role="buton" aria-expanded="false">{{user.username}}</a>
+                    <a <img src="{{ profile.userPicu.url }}" class="rounded-circle" width="20" height="20" /></a>
+
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" href="{% url 'profile' user.profile.pk %}">My Profile</a></li>
                         <li><a class="dropdown-item" href="{% url 'myoffers-list' user.pk%}">My offers</a></li>
