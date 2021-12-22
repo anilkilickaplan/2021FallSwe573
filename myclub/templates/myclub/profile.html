@@ -30,6 +30,9 @@
                 {% if request.user == user %}
                     <p><a style="font-weight: bolder;">Your credit: </a>{{ profile.userCredits }}</p>
                 {% endif %}
+                {% if number_of_followers == 0 %}
+                 <a href="#">No followers.Yet!</a>
+                {% else %}
 
 
                 <!-- <div class="mb-3">
@@ -59,9 +62,7 @@
     </div>
 </div>
 <div class="col-md-3"> 
-    {% if number_of_followers == 0 %}
-    <a href="#">No followers yet!</a>
-    {% else %}
+    
         <table class="table table-hover">
             <thead>
             <tr>

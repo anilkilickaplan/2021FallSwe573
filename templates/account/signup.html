@@ -9,9 +9,10 @@
 {% block content %}
 <div class="row justify-content-center">
   <div class="col-md-6 col-sm-12">
+    <p>{% blocktrans %} Already a member? <a href="{{ login_url }}">Log in</a>.{% endblocktrans %}</p>
+
     <h1>{% trans "Sign Up" %}</h1>
 
-    <p>{% blocktrans %} Already a member? <a href="{{ login_url }}">Log in</a>.{% endblocktrans %}</p>
   </div>
 </div>
 

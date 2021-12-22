@@ -1,4 +1,5 @@
 from django.core.checks import messages
+from django.db.models.query_utils import Q
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
@@ -12,20 +13,65 @@ from django.http import HttpResponseRedirect, request
 from django.contrib import  messages
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
+from django.core.paginator import Paginator
+
 
 
 # OFFER RELATED 
 class OfferListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
+        searchOffer= request.GET.get('q')
         offers = Offer.objects.all().order_by('-offerCreatedDate')
         form = OfferForm()
 
+        if searchOffer is not None:
+            offers  = offers.filter(offerName__icontains = searchOffer) 
+            if offers is None:
+                messages.warning(request,"No match with the keyword")
+        
+        paginator = Paginator(offers, 5) # Show 25 contacts per page.
+
+        page_number = request.GET.get('page')
+        page_obj = paginator.get_page(page_number)
+        
         context = {
             'offer_list': offers,
             'form': form,
+            'page_obj': page_obj
         }
-
+        
         return render(request, 'myclub/offer_list.html', context)
+
+
+    # def get_queryset(self):
+    #     offers = Offer.objects.all().order_by('-offerCreatedDate')
+    #     form = OfferForm()
+    #     paginator = Paginator(offers, 5) # Show 25 contacts per page.
+
+    #     page_number = request.GET.get('page')
+    #     page_obj = paginator.get_page(page_number)
+        
+       
+    #     try:
+    #         keyword = self.request.GET['q']
+    #     except:
+    #         keyword = ''
+    #     if (keyword != ''):
+    #         offers = self.model.objects.filter(
+    #             Q(content__icontains=keyword) | Q(title__icontains=keyword))
+    #     else:
+    #         offers = self.model.objects.all()
+
+    #     context = {
+    #         'offer_list': offers,
+    #         'form': form,
+    #         'page_obj': page_obj
+    #     }
+
+
+    #     return render(request, 'myclub/offer_list.html', context)
+
+
     
 class OfferCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -47,7 +93,7 @@ class OfferCreateView(LoginRequiredMixin, View):
             submitted = True
 
 
-        return redirect('offer-list')
+        return redirect('offer-detail', pk=offer.pk)
 
 class OfferDetailView(View):
     def get(self, request, pk, *args, **kwargs):
@@ -154,14 +200,14 @@ class OfferEditView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         form = OfferForm(request.POST)
-
+        
         if form.is_valid():
             edit_offer = form.save(commit=False)
             edit_offer.offerOwner = request.user
             edit_offer.save()
 
 
-        return redirect('offer-list')
+        return redirect('offer-detail', pk=self.kwargs['pk'])
     
 class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Offer
@@ -205,7 +251,7 @@ class EventCreateView(LoginRequiredMixin, View):
             new_event.eventOwner = request.user
             new_event.save()
 
-        return redirect('event-list')
+        return redirect('event-detail', pk=self.kwargs['pk'])
 
 
 class EventDetailView(View):
@@ -244,7 +290,7 @@ class EventEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
             edit_offer.save()
 
 
-        return redirect('event-list')
+        return redirect('event-detail', pk=self.kwargs['pk'])
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Event
@@ -348,6 +394,7 @@ class myOffersView(View):
 
         else:
             messages.WARNING(request,("There is a problem with authentication. my_offers (views) could not fetch user authentication"))
+
 
 
 
