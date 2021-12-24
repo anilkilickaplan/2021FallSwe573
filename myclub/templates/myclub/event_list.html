@@ -2,40 +2,120 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
+</br></br></br></br>
 
-<div class="d-flex justify-content-center">
+<!-- <div class="d-flex justify-content-center">
 
-        <a class="btn btn-primary" href="#" role="button">Events</a>
-        <a class="btn btn-secondary" href="{% url 'offer-list'%}" role="button">Go to Offers</a>
-</div>      
+    <a class="btn btn-primary" href="#" role="button">events</a>
+    <a class="btn btn-secondary" href="{% url 'event-list'%}" role="button">Go to Events</a>
+</div>       -->
 
-<div class="row justify-content-center mt-3">
+</br>
+<div class="col-md-3" style="width: 20rem;">
+    </br></br></br></br>
 
-    {% for event in event_list %}
-    <div class="row justify-content-center mt-3">
-        <div class="card" style="width: 50rem;" >
-            <div class="card-header"> Event</div> 
-        
-            <div class="card-body">
-                <h5 class="card-title">{{ event.eventName }} </h5>
-                <img src="{{ event.eventPicture.url }}" class="rounded-circle" width="100" height="100" />
-                
-                <p class="card-text">
-                    <p><strong>{{ event.eventName }}, by {{event.eventOwner}}</strong></p>
-                    <p>Description: {{ event.eventDescription }}</p>
-                    <p>Location: {{ event.eventLocation }}</p>
-                    <p>Date: {{ event.eventDate }}</p>
-                    <p>Time: {{ event.eventtime }}</p>
-                    <p>Duration: {{ event.eventDuration }}</p>
-                    <p>Event Capacity: {{ event.eventCapacity }}</p>
-                    <a href="{% url 'event-detail' event.pk %}" class="stretched-link"></a>
-                </p>
-            </div>
-        </div>
+    <div class="form-floating" style="width: 20rem;">
+        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
+          <option selected>Choose a category</option>
+          <option value="1">Art</option>
+          <option value="3">Food</option>
+          <option value="2">Tech</option>
+          <option value="3">Literature</option>
+          <option value="3">Music</option>
+          <option value="3">Finance</option>
+        </select>
+        <label for="floatingSelect">Choose category</label>
     </div>
-    <br/>
 
+</br>
+<form class="form-inline my-2 my-lg-0 pb-2" >
+    <input class="form-control mr-sm-2" name="q" type="search" placeholder="Search" aria-label="Search" style="width: 12rem;">
+    <input class="btn btn-dark my-2 my-sm-0" type="submit" value="Search">
+</form> 
+</br></br>
+</div>
+
+
+
+<div class="col-md-5" style="float:none;margin:auto;">
+
+    <center><h1>Events List</h2></center>
+    <center><h6>Suggested events near {{request.userlocation}}</h6></center>
+</br>
+
+
+
+    {% for event in page_obj %}
+        <div class="card mb-3" style="width:40em;">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ event.eventName }}</h5>
+                        {% if event.eventCapacity ==  number_of_accepted %}
+                            <span style="float:right;">
+                                This event is sold out!
+                            </span>
+                        {%else%}
+                        {%endif%}
+                    </div>
+                   
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4 offset-lg-1">
+                                <h1><img src="{{ event.eventPicture.url }}" class="rounded-circle" width="100" height="180" /></h1>
+
+                            </div>
+                            <div class="col-lg-6 tags p-b-2">
+                                <p class><strong>Hosted by {{event.eventOwner}}</strong></p>
+                                {% if event.eventCategory != ""%}
+                                    <p class>Category: {{event.eventCategory}} </p>
+                                {% else %}
+                                {% endif %} 
+                                <!-- <p class="card-text">Description: {{ event.eventDescription }}</p> -->
+                                <p class="card-text">Location: {{ event.eventLocation }}</p> 
+                                <p class="card-text">Date: {{ event.eventDate }}, {{ event.eventTime }}</p>
+                                <p class="card-text">Duration: {{ event.eventDuration }}</p>
+                                <p class="card-text">Capacity: {{ event.eventCapacity }}</p>
+                                <a href="{% url 'event-detail' event.pk %}" class="stretched-link"></a>
+      
+                            </div>
+                           
+                            
+                        </div>
+                      
+                    </div>
+                </div>
+            </div> 
+        </div>
     {% endfor %}
-    
-{% endblock %}
 
+
+    <div class="pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+
+            {% if  myevents  %}
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    
+</div>
+
+
+<div class="col-md-3">
+
+</div>
+
+
+{% endblock %}

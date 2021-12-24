@@ -4,7 +4,12 @@
 {% block content %}
 <center>
     <br/><br>
-    <h1> Hello {{user.username}} </h1>
+    {% if user.userNameSurname %}
+      <h1 class="py-4">Hello {{ user.userNameSurname }}</h3> 
+    {% else %}
+      <h1 class="py-4">Hello {{ user.username }} </h3>
+    {% endif %}
+    
     <h2>    This is the home page.</h2>
         
     <br/><br><br><br><br>
