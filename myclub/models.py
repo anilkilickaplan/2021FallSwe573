@@ -32,7 +32,7 @@ class Event(models.Model):
     eventDate = models.DateField(default=timezone.now)
     eventTime = models.TimeField(default=timezone.now)
     eventDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
-    eventCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
+    eventCapacity = models.IntegerField(default=10, validators=[MinValueValidator(1),MaxValueValidator(100)])
     eventIsActive = models.BooleanField(default=True)
     eventPicture = models.ImageField(upload_to='uploads/event_pictures/', default='uploads/event_pictures/default.png', blank=True)
     eventCategory = models.TextField(max_length=100,blank=True)

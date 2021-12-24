@@ -39,7 +39,7 @@
 
 <div class="col-md-5" style="float:none;margin:auto;">
 
-    <center><h2>Offers List</h2></center>
+    <center><h1>Offers List</h2></center>
     <center><h6>Suggested events near {{request.userlocation}}</h6></center>
 </br>
 
@@ -51,6 +51,12 @@
                 <div class="card">
                     <div class="card-header">
                         <h5 class="card-title">{{ offer.offerName }}</h5>
+                        {% if offer.offerCapacity ==  number_of_accepted %}
+                            <span style="float:right;">
+                                This offer is sold out!
+                            </span>
+                        {%else%}
+                        {%endif%}
                     </div>
                    
                     <div class="card-body">
@@ -69,7 +75,7 @@
                                 <p class="card-text">Location: {{ offer.offerLocation }}</p> 
                                 <p class="card-text">Date: {{ offer.offerDate }}, {{ offer.offerTime }}</p>
                                 <p class="card-text">Duration: {{ offer.offerDuration }}</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                <p class="card-text">Capacity: {{ offer.offerCapacity }}</p>
                                 <a href="{% url 'offer-detail' offer.pk %}" class="stretched-link"></a>
       
                             </div>
@@ -91,9 +97,11 @@
                 <a href="?page={{ page_obj.previous_page_number }}">previous</a>
             {% endif %}
     
+            {% if  myevents  %}
             <span class="current">
                 Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
             </span>
+            {% endif %}
     
             {% if page_obj.has_next %}
                 <a href="?page={{ page_obj.next_page_number }}">next</a>
