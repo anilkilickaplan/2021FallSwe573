@@ -1,34 +1,69 @@
 {% extends 'landing/base.html' %}
 
 {% block content %}
-    <h2> My offers </h2>
+<br/><br/></br>
 
-    {% for offer in myoffers%}
-               
-    <div class="row justify-content-center mt-3">
-        <div class="card" style="width: 50rem;">
-            <div class="card-header"> Offer </div> 
-        
-            <div class="card-body">
-                <h5> {{ offer.offerName }} </h5>
-                
-                <p class="card-text"></p>
-                    <div class="row justify-content-center mt-3">
-                        <div class="col-md-5 col-sm-12 border-bottom position-relative">
-                            <img src="{{ offer.offerPicture.url }}" class="rounded-circle" width="100" height="100" />
-                            <p><strong>Hosted by {{offer.offerOwner}}</strong></p>
-                            <p>Description: {{ offer.offerDescription }}</p>
-                            <p>Location: {{ offer.offerLocation }}</p>
-                            <p>Date: {{ offer.offerDate }}</p>
-                            <p>Time: {{ offer.offerTime }}</p>
-                            <p>Duration: {{ offer.offerDuration }}</p>
-                            <p>Event Capacity: {{ offer.offerCapacity }}</p>
-                            <a href="{% url 'offer-detail' offer.pk %}" class="stretched-link"></a>
-                        </div>
+        <center><h2>My Offers List</h2></center>
+    {% if not myoffers  %}
+    <br/><br/></br>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="card w-75 h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Your events</h5>
+                    <p class="card-text"> We could not reach any upcoming event for you. 
+                        Would you like to discover events?</p>
+                        <a href="{% url 'offer-list' %}" class="btn btn-dark">Discover offers</a>
                     </div>
             </div>
         </div>
     </div>
+
+
+    {% else %}
+    
+    <div class="col-md-5" style="float:none;margin:auto;">
+        <br/><br/>
+        {% for offer in myoffers%}
+
+                
+        <div class="card mb-3" style="width:40em;">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ offer.offerName }}</h5>
+                    </div>
+                
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4 offset-lg-1">
+                                <h1><img src="{{ offer.offerPicture.url }}" class="rounded-circle" width="100" height="180" /></h1>
+
+                            </div>
+                            <div class="col-lg-6 tags p-b-2">
+                                <p class><strong>Hosted by {{offer.offerOwner}}</strong></p>
+                                {% if offer.offerCategory != ""%}
+                                    <p class>Category: {{offer.offerCategory}} </p>
+                                {% else %}
+                                {% endif %} 
+                                <!-- <p class="card-text">Description: {{ offer.offerDescription }}</p> -->
+                                <p class="card-text">Location: {{ offer.offerLocation }}</p> 
+                                <p class="card-text">Date: {{ offer.offerDate }}, {{ offer.offerTime }}</p>
+                                <p class="card-text">Duration: {{ offer.offerDuration }}</p>
+                                <p class="card-text">Capacity: {{ offer.offerCapacity }}</p>
+                                <a href="{% url 'offer-detail' offer.pk %}" class="stretched-link"></a>
+    
+                            </div>
+                        
+                            
+                        </div>
+                    
+                    </div>
+                </div>
+            </div> 
+        </div>
     {% endfor %}
 <br/>
+</div>
+{%endif%}
 {% endblock %}

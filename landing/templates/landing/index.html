@@ -2,12 +2,19 @@
 
 {% block content %}
 <div class="container">
+    {% if user.is_authenticated %}
+                
+    {% else %}
+    {%include 'landing/colourflow.html' %}
+
+    {% endif %}
+
     <div class="row justify-content-center mt-5">
         <div class="col-md-10 col-sm-12 text-center">
             <h1 class="display-2">ShareClub</h1>
             <br/><br><br><br><br>
 
-            <p class="mt-3 lead"> Join a group to meet people, </p> 
+            <p class="mt-3 lead">Join a group to meet people,</p> 
             <p class="mt-3 lead">share you skills, </p>
             <p class="mt-3 lead">find support, </p>
             <p class="mt-3 lead">grow a business, </p>
@@ -21,7 +28,7 @@
                 {% else %}
                 <a href="{% url 'account_login' %}" class="btn btn-light mr-2">Login</a>
                 <a href="{% url 'account_signup' %}" class="btn btn-dark">Register</a>
-                {%include 'landing/colourflow.html' %}
+                <!-- {%include 'landing/colourflow.html' %} -->
                 {% endif %}
             </div>
             

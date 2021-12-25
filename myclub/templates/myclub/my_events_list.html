@@ -1,34 +1,71 @@
 {% extends 'landing/base.html' %}
 
-{% block content %}
-    <h2> My events </h2>
 
-    {% for event in myevents%}
-               
-    <div class="row justify-content-center mt-3">
-        <div class="card" style="width: 50rem;" >
-            <div class="card-header"> Event</div> 
-        
-            <div class="card-body">
-                <h5 class="card-title">{{ event.eventName }} </h5>
-                <img src="{{ event.eventPicture.url }}" class="rounded-circle" width="100" height="100" />
-                
-                <p class="card-text">
-                    <p><strong>Hosted by {{event.eventOwner}}</strong></p>
-                    <p>Description: {{ event.eventDescription }}</p>
-                    <p>Location: {{ event.eventLocation }}</p>
-                    <p>Date: {{ event.eventDate }}</p>
-                    <p>Duration: {{ event.eventDuration }}</p>
-                    <p>Time: {{ event.eventtime }}</p>
-                    <p>Event Capacity: {{ event.eventCapacity }}</p>
-                    <a href="{% url 'event-detail' event.pk %}" class="stretched-link"></a>
-                </p>
+{% block content %}
+<br/><br/></br>
+
+    <center><h2>My Events List</h2></center>
+    {% if not myevents  %}
+    <br/><br/></br>
+
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="card w-75 h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">Your events</h5>
+                        <p class="card-text"> We could not reach any upcoming event for you. 
+                            Would you like to discover events?</p>
+                        <a href="{% url 'event-list' %}" class="btn btn-dark">Discover events</a>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <br/>
+    {% else %}
 
-    {% endfor %}
+        <div class="col-md-5" style="float:none;margin:auto;">
+                <br/><br/></br>
+
+        {% for event in myevents%}
+                
+        <div class="card mb-3" style="width:40em;">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        <h5 class="card-title">{{ event.eventName }}</h5>
+                    </div>
+                
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-4 offset-lg-1">
+                                <h1><img src="{{ event.eventPicture.url }}" class="rounded-circle" width="100" height="180" /></h1>
+
+                            </div>
+                            <div class="col-lg-6 tags p-b-2">
+                                <p class><strong>Hosted by {{event.eventOwner}}</strong></p>
+                                {% if event.eventCategory != ""%}
+                                    <p class>Category: {{event.eventCategory}} </p>
+                                {% else %}
+                                {% endif %} 
+                                <!-- <p class="card-text">Description: {{ event.eventDescription }}</p> -->
+                                <p class="card-text">Location: {{ event.eventLocation }}</p> 
+                                <p class="card-text">Date: {{ event.eventDate }}, {{ event.eventTime }}</p>
+                                <p class="card-text">Duration: {{ event.eventDuration }}</p>
+                                <p class="card-text">Capacity: {{ event.eventCapacity }}</p>
+                                <a href="{% url 'event-detail' event.pk %}" class="stretched-link"></a>
+    
+                            </div>
+                        
+                            
+                        </div>
+                    
+                    </div>
+                </div>
+            </div> 
+        </div>
+        {% endfor %}
+        <br/>
+         </div>
+
+    {% endif %}
 
 {% endblock %}
-
