@@ -11,12 +11,11 @@
 
         <div class="col-md-7">
             <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 pt-3">
-                <h3 class="py-4">{{ profile.user.userNameSurname }}</h3> 
 
-                {% if user.userNameSurname %}
-                    <h3 class="py-4">{{ profile.user.userNameSurname }}</h3> 
+                {% if profile.userName %}
+                    <h3 class="py-4">{{ profile.userName }}</h3> 
                 {% else %}
-                    <h3 class="py-4">{{ profile.user.userName }} </h3>
+                    <h3 class="py-4">{{ user.username }} </h3>
                 {% endif %}
                             
                 <span>
@@ -34,9 +33,7 @@
                 {% if request.user == user %}
                     <p><a style="font-weight: bolder;">Your credit: </a>{{ profile.userCredits }}</p>
                 {% endif %}
-                {% if number_of_followers == 0 %}
-                 <a href="#">No followers.Yet!</a>
-                {% else %}
+             
 
 
                 <!-- <div class="mb-3">
@@ -69,6 +66,7 @@
             {% if profile.user == request.user %}
 
             {% else %}
+            
                 {% for follower in followers %}
                 <tbody>
                     <tr>

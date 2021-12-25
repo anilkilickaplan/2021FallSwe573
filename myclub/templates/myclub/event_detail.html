@@ -1,5 +1,6 @@
 {% extends 'landing/base.html' %}
 {% load crispy_forms_tags %}
+{% load easy_maps_tags %}
 
 {% block content %}
     <!-- <div class="container">
@@ -31,6 +32,8 @@
                         <p><strong>Hosted by {{event.eventOwner}}</strong></p>
                         <p>Description: {{ event.eventDescription }}</p>
                         <p>Location: {{ event.eventLocation }}</p>
+                        {% easy_map "Russia, Ekaterinburg, Mira 32" 300 400 %}
+
                         <p>Date: {{ event.eventDate }}</p>
                         <p>Time: {{ event.eventtime }}</p>
                         <p>Event Capacity: {{ event.eventCapacity }}</p>

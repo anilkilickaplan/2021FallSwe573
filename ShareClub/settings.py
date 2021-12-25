@@ -58,9 +58,7 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'django_static_fontawesome',
-    'corsheaders',
-    
-    
+    'corsheaders',    
 ]
 
 SITE_ID = 1
@@ -163,4 +161,6 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'home'
 ACCOUNT_EMAIL_REQUIRED = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+
 

@@ -7,6 +7,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 
+
 class Offer(models.Model):
     offerOwner = models.ForeignKey(User, on_delete=models.CASCADE)
     offerCreatedDate = models.DateTimeField(default=timezone.now)
@@ -36,6 +37,7 @@ class Event(models.Model):
     eventIsActive = models.BooleanField(default=True)
     eventPicture = models.ImageField(upload_to='uploads/event_pictures/', default='uploads/event_pictures/default.png', blank=True)
     eventCategory = models.TextField(max_length=100,blank=True)
+
 
     
 class OfferApplication(models.Model):
