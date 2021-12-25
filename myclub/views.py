@@ -17,6 +17,7 @@ from django.core.paginator import Paginator
 
 
 
+
 # OFFER RELATED 
 class OfferListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):

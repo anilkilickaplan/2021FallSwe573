@@ -3,6 +3,7 @@ from .models import Offer, Event, OfferApplication, Review
 from django.forms.widgets import DateInput, TimeInput
 
 
+
 choices = [('Technology','Technology'),
            ('Art','Art'),
            ('Culinary','Culinary'),
