@@ -31,8 +31,8 @@ urlpatterns = [
 
     # Followers
     path('profile/<int:pk>/userfollowers/', views.FollowersListView.as_view(), name='followers'),
-    path('profile/<int:pk>/userfollowers/add', views.AddFollower.as_view(), name='add-userfollower'),
-    path('profile/<int:pk>/userfollowers/remove', views.RemoveFollower.as_view(), name='remove-userfollower'),
+    path('profile/<int:pk>/userfollowers/add/<int:followpk>', views.AddFollower.as_view(), name='add-userfollower'),
+    path('profile/<int:pk>/userfollowers/remove/<int:followpk>', views.RemoveFollower.as_view(), name='remove-userfollower'),
     path('userfollowers/remove/<int:userfollower_pk>', views.RemoveMyFollower.as_view(), name='remove-my-userfollower'),
 
     # APPLICATIONS

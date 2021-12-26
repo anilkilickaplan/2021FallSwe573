@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from location_field.models.plain import PlainLocationField
 
 
 
@@ -17,6 +17,7 @@ class Offer(models.Model):
     offerTime = models.TimeField(null=False,default=timezone.now)
     offerDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
     offerLocation = models.CharField(max_length=100, blank=True, null=True)
+    offerMap = PlainLocationField(default='41.031964, 29.008841', zoom=7, blank=False, null=False)
     offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
     offerIsActive = models.BooleanField(default=True)
     is_taken = models.BooleanField(default=False)
@@ -30,6 +31,7 @@ class Event(models.Model):
     eventName = models.TextField()
     eventDescription = models.TextField()
     eventLocation = models.CharField(max_length=100, blank=True, null=True)
+    eventMap = PlainLocationField(default='41.031964, 29.008841', zoom=7, blank=False, null=False)
     eventDate = models.DateField(default=timezone.now)
     eventTime = models.TimeField(default=timezone.now)
     eventDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    

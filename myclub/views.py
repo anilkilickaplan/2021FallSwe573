@@ -84,11 +84,19 @@ class OfferCreateView(LoginRequiredMixin, View):
 
     def post(self, request, *args, **kwargs):
         form = OfferForm(request.POST, request.FILES)
+        owner_profile = UserProfile.objects.get(pk=request.user)
 
         if form.is_valid():
+            totalcredit = owner_profile.userReservehour + owner_profile.userCredits
             new_offer = form.save(commit=False)
-            new_offer.offerOwner = request.user
-            new_offer.save()
+            if totalcredit + new_offer.offerDuration <= 15:
+                new_offer.offerOwner = request.user
+                owner_profile.userReservehour = owner_profile.userReservehour + new_offer.offerDuration
+                owner_profile.save()
+                new_offer.save()
+                messages.success(request,'Offer is created')
+            else:
+                messages.warning(request, 'Your credits and pending offer durations cannot exceed 15.')
         else:
             messages.warning(request, 'Form is not valid')
 
@@ -232,10 +240,11 @@ class EventListView(LoginRequiredMixin, View):
         searchEvent= request.GET.get('q')
         events = Event.objects.all().order_by('-eventCreatedDate')
         form = EventForm()
+        current_time = timezone.now().date()
         
         if searchEvent is not None:
-            offers  = events.filter(offerName__icontains = searchEvent) 
-            if offers is None:
+            events  = events.filter(eventName__icontains = searchEvent) 
+            if events is None:
                 messages.warning(request,"No match with the keyword")
  
 
@@ -247,7 +256,8 @@ class EventListView(LoginRequiredMixin, View):
         context = {
             'event_list': events,
             'form': form,
-            'page_obj': page_obj
+            'page_obj': page_obj,
+            'current_time': current_time
         }
 
         return render(request, 'myclub/event_list.html', context)
@@ -283,10 +293,14 @@ class EventDetailView(View):
     def get(self, request, pk, *args, **kwargs):
         event = Event.objects.get(pk=pk)
         form = EventForm()
+        current_time = timezone.now().date()
+
 
         context = {
             'event': event,
             'form': form,
+            'current_time': current_time
+
         }
 
         return render(request, 'myclub/event_detail.html', context)
@@ -425,15 +439,17 @@ class myOffersView(View):
 
 class AddFollower(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
+        follow_pk = self.kwargs['followpk']
         profile = UserProfile.objects.get(pk=pk)
         profile.userFollowers.add(request.user)
-        return redirect('profile', pk=profile.pk)
+        return redirect('profile', pk=follow_pk)
 
 class RemoveFollower(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
+        follow_pk = self.kwargs['followpk']
         profile = UserProfile.objects.get(pk=pk)
         profile.userFollowers.remove(request.user)
-        return redirect('profile', pk=profile.pk)
+        return redirect('profile', pk=follow_pk)
 
 class RemoveMyFollower(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
