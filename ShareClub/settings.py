@@ -59,7 +59,16 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'django_static_fontawesome',
     'corsheaders',    
+    'location_field.apps.DefaultConfig',
+    
 ]
+
+LOCATION_FIELD = {
+    'provider.google.api': '//maps.google.com/maps/api/js?sensor=false',
+    'provider.google.api_key': '',
+    'provider.google.api_libraries': '',
+    'provider.google.map.type': 'ROADMAP',
+}
 
 SITE_ID = 1
 
@@ -161,6 +170,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 LOGIN_REDIRECT_URL = 'home'
 ACCOUNT_EMAIL_REQUIRED = True
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-
 
 

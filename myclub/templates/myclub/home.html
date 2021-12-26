@@ -4,13 +4,14 @@
 {% block content %}
 <center>
     <br/><br>
-    {% if profile.userName %}
-       <h3 class="py-4">Hello {{ user.profile.userName }}</h3> 
+    {%include 'landing/colourflow.html' %}
+
+    {% if user.profile.userName %}
+       <h1 class="py-4">Hello {{ user.profile.userName }}</h3> 
     {% else %}
-      <h3 class="py-4">Hello {{ user.username }} </h3>
+      <h1 class="py-4">Hello {{ user.username }} </h3>
     {% endif %}
     
-    <h2>    This is the home page.</h2>
         
     <br/><br><br><br><br>
    

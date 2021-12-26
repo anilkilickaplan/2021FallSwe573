@@ -13,7 +13,8 @@ choices = [('Technology','Technology'),
 class OfferForm(forms.ModelForm):
     class Meta:
         model = Offer
-        fields = ['offerPicture','offerName','offerDescription', 'offerCategory','offerDate','offerTime','offerDuration','offerCapacity','offerLocation']
+        fields = ['offerPicture','offerName','offerDescription', 'offerCategory',
+                  'offerDate','offerTime','offerDuration','offerCapacity','offerMap']
         widgets = { 
             'offerName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Name'}),
             'offerDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Offer Description'}), 
@@ -22,14 +23,14 @@ class OfferForm(forms.ModelForm):
             'offerTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
             'offerDuration': forms.NumberInput(),
             'offerCapacity': forms.NumberInput(),
-            'offerLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Location'}),
+            # 'offerLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Location'}),
         }
 
       
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['eventPicture','eventName','eventDescription', 'eventCategory','eventDate','eventTime','eventCapacity','eventLocation']
+        fields = ['eventPicture','eventName','eventDescription', 'eventCategory','eventDate','eventTime','eventCapacity','eventMap']
         widgets = { 
             'eventName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event Name'}),
             'eventDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Event Description'}), 
@@ -38,7 +39,7 @@ class EventForm(forms.ModelForm):
             'eventTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
             #'eventTime': forms.TimeField(widget=SelectDateWidget(minute_step=10, second_step=10)), (https://bradmontgomery.net/blog/selecttimewidget-a-custom-django-widget/)
             'eventCapacity': forms.NumberInput(),
-            'eventLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event City'}),
+            # 'eventLocation':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event City'}),
         }
         
 
