@@ -10,15 +10,12 @@ Please check out my [Wiki](https://github.com/anilkilickaplan/2021FallSwe573/wik
 A social knowledge sharing platform where users can create their own events and offers, attend others' and create social networks through the website. \
 Attending events and offers are subject to approval by the owner of the event or offer. There will be only time exchange via offers; attendees will give their time equal to event duration (1h, 2h etc.) and the owners will receive an amount equal to event duration.
 ## How to install this project?
-TBD
 
-A sample instruction:
-
-Installation
-Install Dependencies pip install -r requirements.txt
-Migrate Database (SQLite) python manage.py migrate
-Create Super User (for Admin page) python manage.py createsuperuser
-Run Server python manage.py runserver
+Installation \
+Install Dependencies pip install -r requirements.txt \
+Migrate Database (SQLite) python manage.py migrate \
+Create Super User (for Admin page) python manage.py createsuperuser \
+Run Server python manage.py runserver \
 ## How to use the product?
 TBD
 
