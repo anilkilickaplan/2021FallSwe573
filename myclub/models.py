@@ -73,7 +73,12 @@ class UserProfile(models.Model):
 
 #class Friendship(models.Model)
 
-
+class UserRatings(models.Model):
+    rated = models.ForeignKey(User, verbose_name='user', related_name='rated', on_delete=models.CASCADE)
+    rater = models.ForeignKey(User, verbose_name='user', related_name='rater', on_delete=models.SET_NULL, null=True)
+    rating = models.IntegerField(blank=False, null=True)
+    offer = models.ForeignKey('Offer', on_delete=models.CASCADE)
+    feedback = models.TextField(blank=True, null=True)
 
 
 @receiver(post_save, sender=User)

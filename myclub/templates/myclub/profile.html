@@ -21,22 +21,24 @@
                 <span>
                     {% if request.user == user %}
                     <span style="float:right;"> 
-                        <button class="btn btn-dark" type=submit>Edit your profile</button>
+                        <!-- <button class="btn btn-dark" type=submit>Edit your profile</button> -->
+                        <a class="btn btn-dark" href="{% url 'profile-edit' profile.pk %}"  
+                            role="button" aria-pressed="true">Edit</a>
+                    </span>
                     {% else %}
                         {% if is_following %}
                             <form method="POST" action="{% url 'remove-userfollower' request.user.pk profile.pk %}">
                             {% csrf_token %}
                             <button class="btn btn-outline-danger" type=submit>UnFollow</button>
-                        </form>
+                            </form>
                         {% else %}
                              <form method="POST" action="{% url 'add-userfollower' request.user.pk profile.pk %}">
                             {% csrf_token %}
                             <button class="btn btn-outline-dark" type=submit>Follow</button>
-                        </form>
+                            </form>
                         {% endif %}
                     {% endif %}
-                    </span>
-                </span>
+                    
                 <img src="{{ profile.userPicture.url }}" class="rounded-circle" width="100" height="100" />
 
                 <p>Birth Location: {{ profile.userLocation }}</p>
