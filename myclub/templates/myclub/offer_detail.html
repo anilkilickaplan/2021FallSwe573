@@ -100,6 +100,7 @@
                                 </form>
                             {% else %}
                                 <p>You confirmed application is taken.</p>
+                                <a class="btn btn-primary mt-3" href="{% url 'rateuser' offer.pk offer.offerOwner.pk %}">Rating</a>
                             {% endif %}
                         {% endif %}
                     {% else %}

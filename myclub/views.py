@@ -5,8 +5,8 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.urls.base import reverse
 from django.views import View, generic
-from .models import Offer, OfferApplication, UserProfile, Event, Review
-from .forms import OfferApplicationForm, OfferForm, EventForm, ReviewForm
+from .models import Offer, OfferApplication, UserProfile, Event, Review, UserRatings
+from .forms import OfferApplicationForm, OfferForm, EventForm, RatingForm, ReviewForm
 from django.views.generic.edit import UpdateView, DeleteView
 from datetime import datetime, timezone
 from django.http import HttpResponseRedirect, request
@@ -528,3 +528,84 @@ def CreditExchange(offer):
                 offer_taker.userReservehour = offer_taker.userReservehour + offer.offerDuration
                 offer_taker.save()
     return redirect('offer-detail', pk=offer.pk)
+
+
+
+class RateUser(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        form = RatingForm()
+        servicepk = self.kwargs['servicepk']
+        service = Service.objects.get(pk=servicepk)
+        ratedpk = self.kwargs['ratedpk']
+        rated = UserProfile.objects.get(user=ratedpk)
+        ratingRecord = UserRatings.objects.filter(service=service).filter(rated=rated.user).filter(rater=request.user)
+        isRated = len(ratingRecord)
+
+        context = {
+            'form': form,
+            'ratingRecord': ratingRecord,
+            'isRated': isRated,
+        }
+
+        return render(request, 'social/rating.html', context)
+
+    def post(self, request, *args, **kwargs):
+        form = RatingForm(request.POST)
+        servicepk = self.kwargs['servicepk']
+        service = Service.objects.get(pk=servicepk)
+        ratedpk = self.kwargs['ratedpk']
+        rated = UserProfile.objects.get(user=ratedpk)
+
+        if form.is_valid():
+            new_rating = form.save(commit=False)
+            new_rating.rater = request.user
+            new_rating.service = service
+            new_rating.rated = rated.user
+            new_rating.save()
+            messages.success(request, 'Rating is successful.')
+
+        return redirect('service-detail', pk=servicepk)
+
+class RateUserEdit(LoginRequiredMixin, View):
+    def get(self, request, *args, pk, **kwargs):
+        rating = UserRatings.objects.get(pk=pk)
+        form = RatingForm(instance = rating)     
+        context = {
+            'form': form,
+        }
+        return render(request, 'social/rating-edit.html', context)
+
+    def post(self, request, *args, pk, **kwargs):
+        form = RatingForm(request.POST)
+        rating = UserRatings.objects.get(pk=pk)
+
+        if form.is_valid():
+            edit_rating = form.save(commit=False)
+            rating.rating = edit_rating.rating
+            rating.feedback = edit_rating.feedback
+            rating.save()        
+            messages.success(request, 'Rating editing is successful.')
+
+        context = {
+            'form': form,
+        }
+
+        return render(request, 'myclub/rating-edit.html', context)
+
+class RateUserDelete(LoginRequiredMixin, View):
+    def get(self, request, *args, pk, **kwargs):
+        rating = UserRatings.objects.get(pk=pk)
+
+        form = RatingForm(instance = rating)
+        context = {
+            'form': form,
+        }
+
+        return render(request, 'myclub/rating-delete.html', context)
+
+    def post(self, request, *args, pk, **kwargs):
+        rating = UserRatings.objects.get(pk=pk)
+        offer = rating.offer
+        rating.delete()
+        return redirect('offer-detail', pk=offer.pk)
+
