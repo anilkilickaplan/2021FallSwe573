@@ -15,7 +15,7 @@ Attending events and offers are subject to approval by the owner of the event or
 Make sure local system has: postgresql, docker and git
 
 Install Dependencies pip install -r requirements.txt \
-Create a Database in your local\
+Create a Database in your local
 
 <ul>
   <li>docker-compose run db -d</li>
