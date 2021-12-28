@@ -12,12 +12,22 @@ Attending events and offers are subject to approval by the owner of the event or
 
 <h2> How to install this project?</h2>
 
-Installation \
+Make sure local system has: postgresql, docker and git
+
 Install Dependencies pip install -r requirements.txt \
-Migrate Database (SQLite) python manage.py migrate \
+Create a Database in your local\
+
+<ul>
+  <li>docker-compose run db -d</li>
+  <li>docker exec -it core_db bash</li>
+  <li>psql -U postgres</li>
+  <li>CREATE DATABASE </li>
+</ul>
+
 Create Super User (for Admin page) python manage.py createsuperuser \
 Run Server python manage.py runserver 
-## How to use the product?
+
+<h2> How to use the product? </h2>
 TBD
 
 
