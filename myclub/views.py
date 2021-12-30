@@ -119,7 +119,7 @@ class OfferDetailView(View):
         accepted_applications = applications.filter(isApproved=True)
         application_number = len(applications)
         is_active = True
-        if offer.offerDate <= timezone.now().date():
+        if offer.offerDate < timezone.now().date():
             is_active = False
         if len(applications) == 0:
             is_applied = False
@@ -199,7 +199,7 @@ class OfferEditView(LoginRequiredMixin, View):
         if offer.offerOwner == request.user:
             if offer.offerDate > timezone.now().date():
 
-                form = OfferForm(instance= offer)
+                form = OfferForm(instance = offer)
                 context = {
                     'form': form,
                 }
@@ -213,11 +213,20 @@ class OfferEditView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         form = OfferForm(request.POST, request.FILES)
         pk=self.kwargs['pk']
+        offer = Offer.objects.get(pk=pk)
        
         if form.is_valid():
             edit_offer = form.save(commit=False)
-            edit_offer.offerOwner = request.user
-            edit_offer.save()
+            if request.FILES:
+                offer.offerPicture = edit_offer.offerPicture
+            offer.offerName = edit_offer.offerName
+            offer.offerDescription= edit_offer.offerDescription
+            offer.offerCategory=edit_offer.offerCategory
+            offer.offerLocation=edit_offer.offerLocation
+            offer.offerMap=edit_offer.offerMap
+            offer.offerDate=edit_offer.offerDate
+            offer.offerTime=edit_offer.offerTime
+            offer.save()
         else:
             messages.WARNING(request,("There is a problem with editing the offer"))
 
@@ -309,27 +318,42 @@ class EventDetailView(View):
         pass
 
 
-class EventEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
+class EventEditView(LoginRequiredMixin, UpdateView):
     def get(self, request, *args, pk, **kwargs):
-        offer = Event.objects.get(pk=pk)
-
-        form = EventForm(instance= offer)
-        context = {
-            'form': form,
-        }
-
-        return render(request, 'myclub/event_edit.html', context)
+        event = Event.objects.get(pk=pk)
+        if event.eventOwner == request.user:
+            if event.eventDate > timezone.now().date():
+           
+                form = EventForm(instance = event)
+                context = {
+                'form': form,
+                 }
+                return render(request, 'myclub/event_edit.html', context)
+            else:
+                return redirect('event-detail', pk=event.pk)
+        else:
+            return redirect('event-detail', pk=event.pk)
 
     def post(self, request, *args, **kwargs):
         form = EventForm(request.POST)
+        pk=self.kwargs['pk']
+        event = Event.objects.get(pk=pk)
 
         if form.is_valid():
-            edit_offer = form.save(commit=False)
-            edit_offer.eventOwner = request.user
-            edit_offer.save()
+            edit_event = form.save(commit=False)
+            if request.FILES:
+                event.eventPicture = edit_event.eventPicture
+            event.eventName = edit_event.eventName
+            event.eventDescription= edit_event.eventDescription
+            event.eventCategory=edit_event.eventCategory
+            event.eventLocation=edit_event.eventLocation
+            event.eventMap=edit_event.eventMap
+            event.eventDate=edit_event.eventDate
+            event.eventTime=edit_event.eventTime
+            event.save()
 
 
-        return redirect('event-detail', pk=self.kwargs['pk'])
+        return redirect('event-detail', pk)
 
 class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = Event
@@ -534,11 +558,11 @@ def CreditExchange(offer):
 class RateUser(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         form = RatingForm()
-        servicepk = self.kwargs['servicepk']
-        service = Service.objects.get(pk=servicepk)
+        offerpk = self.kwargs['offerpk']
+        offer = Offer.objects.get(pk=offerpk)
         ratedpk = self.kwargs['ratedpk']
         rated = UserProfile.objects.get(user=ratedpk)
-        ratingRecord = UserRatings.objects.filter(service=service).filter(rated=rated.user).filter(rater=request.user)
+        ratingRecord = UserRatings.objects.filter(offer=offer).filter(rated=rated.user).filter(rater=request.user)
         isRated = len(ratingRecord)
 
         context = {
@@ -547,24 +571,24 @@ class RateUser(LoginRequiredMixin, View):
             'isRated': isRated,
         }
 
-        return render(request, 'social/rating.html', context)
+        return render(request, 'myclub/rating.html', context)
 
     def post(self, request, *args, **kwargs):
         form = RatingForm(request.POST)
-        servicepk = self.kwargs['servicepk']
-        service = Service.objects.get(pk=servicepk)
+        offerpk = self.kwargs['offerpk']
+        offer = Offer.objects.get(pk=offerpk)
         ratedpk = self.kwargs['ratedpk']
         rated = UserProfile.objects.get(user=ratedpk)
 
         if form.is_valid():
             new_rating = form.save(commit=False)
             new_rating.rater = request.user
-            new_rating.service = service
+            new_rating.offer = offer
             new_rating.rated = rated.user
             new_rating.save()
-            messages.success(request, 'Rating is successful.')
+            messages.success(request, 'Your rate is submitted')
 
-        return redirect('service-detail', pk=servicepk)
+        return redirect('offer-detail', pk=offerpk)
 
 class RateUserEdit(LoginRequiredMixin, View):
     def get(self, request, *args, pk, **kwargs):
@@ -573,7 +597,7 @@ class RateUserEdit(LoginRequiredMixin, View):
         context = {
             'form': form,
         }
-        return render(request, 'social/rating-edit.html', context)
+        return render(request, 'myclub/rating-edit.html', context)
 
     def post(self, request, *args, pk, **kwargs):
         form = RatingForm(request.POST)
@@ -584,7 +608,7 @@ class RateUserEdit(LoginRequiredMixin, View):
             rating.rating = edit_rating.rating
             rating.feedback = edit_rating.feedback
             rating.save()        
-            messages.success(request, 'Rating editing is successful.')
+            messages.success(request, 'Rating edit is successful.')
 
         context = {
             'form': form,

@@ -37,7 +37,7 @@
         <div class="card" style="width: 50rem;">    
             <div class="card-header"> {{ offer.offerName }} 
                 {% if request.user == offer.offerOwner %}
-                    {% if event.eventDate >= current_time  %}
+                    {% if is_active %}
                         <span style="float:right;">
                             <a href="{% url 'offer-edit' offer.pk %}" style="color: rgb(55, 90, 247);">Edit Offer</a>
                             <a href="{% url 'offer-delete' offer.pk %}" style="color: rgb(245, 10, 10);">Delete Offer</a>
