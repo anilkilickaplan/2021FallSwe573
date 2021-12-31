@@ -31,6 +31,7 @@
 </ul>
 {% endif %}
 
+</br></br></br>
 
     <div class="container">
         <div class="row justify-content-center mt-3">
@@ -43,9 +44,9 @@
                 <form method="POST">
                     {% csrf_token %}
                     {{ form | crispy }}
-                    <div class="map-widget" style="margin-top: 4px">
+                    <!-- <div class="map-widget" style="margin-top: 4px">
                         <div id="map_location" style="width: 500px; height: 250px"></div>
-                    </div>
+                    </div> -->
                     <div class="d-grid gap-2">
                         <button class="btn btn-dark mt-3">Submit Event</button>
                     </div>

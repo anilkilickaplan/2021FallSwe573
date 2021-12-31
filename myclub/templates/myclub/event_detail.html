@@ -14,56 +14,65 @@
 
     <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
     <link rel="stylesheet" type="text/css" href="/static/admin/css/responsive.css">
-    
+
     <meta name="robots" content="NONE,NOARCHIVE">
 </head>
 
 {% extends 'landing/base.html' %}
 {% load crispy_forms_tags %}
 
+
+
 {% block content %}
-    <!-- <div class="container">
-        <div class="row mt-5">
-            <div class="col-md-5 col-sm-6">
-                <a href="{% url 'event-list' %}" class="btn btn-dark">Back To Events</a>
-            </div>
-        </div> -->
+</br></br></br>
 
-        <div class="row justify-content-center mt-3">
-            
-            <div class="card" style="width: 50rem;" >
-                <div class="card-header"> Event
-                    <span style="float:right;">
-                        {% if request.user == event.eventOwner %}
-                            {% if event.eventDate >= current_time  %}
-                                <a href="{% url 'event-edit' event.pk %}" style="color: rgb(55, 90, 247);">Edit</a>
-                                <a href="{% url 'event-delete' event.pk %}" style="color: rgb(245, 10, 10);">Delete</a>
-                            {%else%}
-                                <p>Event is not active!</p>
-                            {% endif %}
+<center><h2>Event detail</h2></center>
 
+<div class="row justify-content-center mt-3">
+    <div class="col-md-1"></div>
+
+    <div class="col-md-7">
+    </br></br></br>
+
+        <div class="card" style="width: 50rem;">    
+            <div class="card-header"> {{ event.eventName }} 
+                {% if request.user == event.eventOwner %}
+                    {% if is_active %}
+                        {% if event.eventTime >= current_time  %}
+                            <span style="float:right;">
+                                <a href="{% url 'event-edit' event.pk %}" style="color: rgb(55, 90, 247);">Edit Event</a>
+                                <a href="{% url 'event-delete' event.pk %}" style="color: rgb(245, 10, 10);">Delete Event</a>
+                            </span>
+                        {%else%}
+                            <span style="float:right;">
+                                <p style="color: rgb(245, 10, 10);">Past event</p>
+                            </span>
                         {% endif %}
-                    </span>
-                </div> 
-               
-                <div class="card-body">
-                    <h5 class="card-title">{{ event.eventName }} </h5>
-                    <img src="{{ event.eventPicture.url }}" class="rounded-circle" width="100" height="100" />
+                    {%else%}
+                        <span style="float:right;">
+                            <p>Past event</p>
+                        </span>
+                    {% endif %}
+                    
+                {% endif %}
+            </div> 
 
-              
-                    <p class="card-text">
-                        <p><strong>Hosted by {{event.eventOwner.profile.userName}}</strong></p>
-                        <p>Description: {{ event.eventDescription }}</p>
-                        <p>Location: {{ event.eventLocation }}</p>
-                        <p>Date: {{ event.eventDate }}</p>
-                        <p>Time: {{ event.eventtime }}</p>
-                        <p>Event Capacity: {{ event.eventCapacity }}</p>
+            <div class="card-body">
+                <h5>  </h5>
+            <p class="card-text"></p>
+            <!-- <img src="{{ event.eventPicture.url }}" width="100" height="100" /> -->
+            <img class="img-fluid rounded" src="{{event.eventPicture.url}}" alt="" width="400" height="200">
 
-                    </p>
-                    <div>
-                        <input style="visibility: hidden; height: 0px; margin: 0px;" type="text" 
-                        name="location" value={{ event.eventMap }} required id="id_location" 
-                        data-location-field-options="{&quot;map.provider&quot;: &quot;google&quot;, &quot;map.zoom&quot;: 13, 
+            <p> <a href="{% url 'profile' event.eventOwner.profile.pk %}">Hosted by {{event.eventOwner.profile.userName}}</a> </p>
+            <p>Duration: {{ event.eventDuration }}</p>
+            <p>Description: {{ event.eventDescription }}</p>
+            <p>Date: {{ event.eventDate }}</p>
+            <p>Time: {{ event.eventTime }}</p>
+            <p>Event Capacity: {{ event.eventCapacity }}</p>
+                <div>
+                    <input style="visibility: hidden; height: 0px; margin: 0px;" type="text" 
+                    name="location" value={{ event.eventMap }} required id="id_location" 
+                    data-location-field-options="{&quot;map.provider&quot;: &quot;google&quot;, &quot;map.zoom&quot;: 13, 
                         &quot;search.provider&quot;: &quot;google&quot;, &quot;search.suffix&quot;: &quot;&quot;, 
                         &quot;provider.google.api&quot;: &quot;//maps.google.com/maps/api/js?sensor=false&quot;, 
                         &quot;provider.google.api_key&quot;: &quot;AIzaSyCnZOziNKACqM7Q231fvGPtTJDxhqHe7ow&quot;, 
@@ -75,12 +84,107 @@
                         &quot;provider.google.api_libraries&quot;: &quot;&quot;, 
                         &quot;provider.google.map.type&quot;: &quot;ROADMAP&quot;, &quot;field_options&quot;: 
                         {&quot;based_fields&quot;: [], &quot;prefix&quot;: &quot;&quot;}}">
-                         <div class="map-widget" style="margin-top: 4px">
-                            <div id="map_location" style="width: 500px; height: 250px"></div>
-                        </div>
+                    <div class="map-widget" style="margin-top: 4px">
+                        <div id="map_location" style="width: 500px; height: 250px"></div>
                     </div>
                 </div>
             </div>
-        </div>
+        
+            {% if event.eventOwner == request.user %}
+            {% else %}
+                {% if is_applied %}
+                    {% if is_accepted %}
+                        <p>Your application is accepted.</p>
 
+                    {% else %}
+                        <p>Your application is not accepted yet.</p>
+                    {% endif %}
+
+
+                    {% if is_active %}
+                        {% for application in applications_this %}
+                            <div class="d-grid gap-2">
+                                <a class="btn btn-danger mt-3" href="{% url 'application-delete' event.pk application.pk %}">Cancel Application</a>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% else %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        {{ form | crispy}}
+                        {% if is_active %}
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-dark mt-3">Apply</button>
+                            </div>
+                        {% endif %}
+                    </form>
+                {% endif %}
+        {% endif %}
+
+        </div>
+    </div>
+    <div class="col-md-3">
+        <center><h4>Attendee List</h4></center>
+        {% if event.eventOwner == request.user %}
+    <!-- Event page attendee list for Event Owner, can approve or remove-->
+            </br></br></br>
+
+            <table class="table table-hover">
+
+                <thead>
+                <tr>
+                    <th scope="col" >Username</th>
+                    <!-- <th scope="col" >Credibility</th> -->
+                    <th scope="col" >Status</th>
+                    <!-- <th scope="col" >Edit</th> -->
+                </tr>
+                </thead>
+                    {% for application_done in applications %}
+                    <tbody>
+                        <tr>
+                            <td>{{ application_done.applicant.profile.user.username}}</td>
+                            <!-- <td>{{ application_done.applicant.profile.user.usercredibility }}</td> -->
+                            {% if is_active %}
+                                {% if application_done.isApproved %}
+                                    <td><i class="fa-solid fa-circle-check"></i>Approved</td>
+                                    <!-- <td><a href="{% url 'application-edit' event.pk application_done.pk %}" class="btn btn-danger">Drop</a></td> -->
+                                {% else %}
+                                    {% if event.eventCapacity ==  number_of_accepted %}
+                                    {% else %}
+                                        <!-- <td><i class="fa-solid fa-hourglass"></i></td> -->
+                                        <td class="table-warning"><a href="{% url 'application-edit' event.pk application_done.pk %}" class="btn btn-success">Approve</a>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                        </tr>
+                    </tbody>
+                    {% endfor %}
+            </table>
+        {% else %} 
+        <!-- Event page attendee list -->
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col" >PP</th>
+                                <th scope="col" >Username</th>
+                            </tr>
+                            </thead>
+                                {% for application_done in applications %}
+                                    {% if application_done.isApproved %}
+                                    <tbody>
+                                    <tr>
+                                        <td><img src="{{ application_done.applicant.profile.user.userPicture.url }}" 
+                                                class="rounded-circle" width="50" height="50" /></td>
+                                        <td><a class="btn btn-primary mt-3" href="{% url 'profile' application_done.applicant.profile.pk %}">
+                                            {{application_done.applicant.profile.user.username}}</a></td>
+                                    </tr>
+                                    </tbody>
+                                    {%endif%}
+                            {% endfor %}
+                        </table>
+        {% endif %}
+    </div>
+</div>
 {% endblock content %}
+
+            

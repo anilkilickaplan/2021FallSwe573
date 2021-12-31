@@ -4,51 +4,79 @@
 </br>
 </br>
 
+{% if profile.user == request.user %}
+<center><h1>My Profile</h2></center>
+</br>   
+
+{% else %}
+<center><h1>Profile</h2></center>
+</br>   
+{% endif %}
+
+<div class="row">
+    <div class="col d-flex justify-content-center">
+        <div class="card w-45 h-100">
+          <div class="card-body">
+            {% if profile.userName %}
+                <h5 class="card-title">{{ profile.userName }}</h5> 
+            {% else %}
+                <h5 class="card-title">{{ user.username }} </h5>
+            {% endif %}
+                    
+            <span>
+                {% if request.user == user %}
+                <span style="float:right;"> 
+                    <!-- <button class="btn btn-dark" type=submit>Edit your profile</button> -->
+                    <a class="btn btn-dark" href="{% url 'profile-edit' profile.pk %}"  
+                        role="button" aria-pressed="true">Edit</a>
+                </span>
+                {% else %}
+                    {% if is_following %}
+                        <form method="POST" action="{% url 'remove-userfollower' request.user.pk profile.pk %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-danger" type=submit>UnFollow</button>
+                        </form>
+                    {% else %}
+                         <form method="POST" action="{% url 'add-userfollower' request.user.pk profile.pk %}">
+                        {% csrf_token %}
+                        <button class="btn btn-outline-dark" type=submit>Follow</button>
+                        </form>
+                    {% endif %}
+                {% endif %}
+                
+            <img src="{{ profile.userPicture.url }}" class="rounded-circle" width="100" height="100" />
+
+            <p>Birth Location: {{ profile.userLocation }}</p>
+            <p>Birth Date: {{ profile.userBirthDate }}</p>
+            <p>Bio: {{ profile.userBio }}</p>
+            {% if request.user == user %}
+                <p><a style="font-weight: bolder;">Your available credits: </a>{{ profile.userCredits }}</p>
+                <p class="text-white bg-dark">Available credits: Duration of any applied offer must be lower or equal to your available credits</p>
+                    </br>
+                <p><a style="font-weight: bolder;">Your on hold credits: </a>{{ profile.userReservehour }}</p>
+                <p class="text-white bg-dark">Maecenas sed diam eget risus varius blandit sit amet non magna.</p>
+
+            {% endif %}
+         
+          </div>
+        </div>
+      </div>
+</div>
+
+
+<div class="row">
+
+    
+</div>
 
  
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-1"></div>
 
-        <div class="col-md-7">
-            <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-10 pt-3">
+           
 
-                {% if profile.userName %}
-                    <h3 class="py-4">{{ profile.userName }}</h3> 
-                {% else %}
-                    <h3 class="py-4">{{ user.username }} </h3>
-                {% endif %}
-                            
-                <span>
-                    {% if request.user == user %}
-                    <span style="float:right;"> 
-                        <!-- <button class="btn btn-dark" type=submit>Edit your profile</button> -->
-                        <a class="btn btn-dark" href="{% url 'profile-edit' profile.pk %}"  
-                            role="button" aria-pressed="true">Edit</a>
-                    </span>
-                    {% else %}
-                        {% if is_following %}
-                            <form method="POST" action="{% url 'remove-userfollower' request.user.pk profile.pk %}">
-                            {% csrf_token %}
-                            <button class="btn btn-outline-danger" type=submit>UnFollow</button>
-                            </form>
-                        {% else %}
-                             <form method="POST" action="{% url 'add-userfollower' request.user.pk profile.pk %}">
-                            {% csrf_token %}
-                            <button class="btn btn-outline-dark" type=submit>Follow</button>
-                            </form>
-                        {% endif %}
-                    {% endif %}
-                    
-                <img src="{{ profile.userPicture.url }}" class="rounded-circle" width="100" height="100" />
+        
 
-                <p>Birth Location: {{ profile.userLocation }}</p>
-                <p>Birth Date: {{ profile.userBirthDate }}</p>
-                <p>Bio: {{ profile.userBio }}</p>
-                {% if request.user == user %}
-                    <p><a style="font-weight: bolder;">Your credit: </a>{{ profile.userCredits }}</p>
-                {% endif %}
-             
 
+                   
 
                 <!-- <div class="mb-3">
                 {% if number_of_followers == 0 %}
