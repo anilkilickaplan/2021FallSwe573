@@ -42,7 +42,7 @@ urlpatterns = [
     path('offer/<int:pk>/confirmgiven/', views.ConfirmOfferGiven.as_view(), name='confirm-offer-given'),
 
     #RATING and REVIEW
-    path('rate/<int:servicepk>/<int:ratedpk>', views.RateUser.as_view(), name='rateuser'),
+    path('rate/<int:offerpk>/<int:ratedpk>', views.RateUser.as_view(), name='rateuser'),
     path('rate/edit/<int:pk>', views.RateUserEdit.as_view(), name='rating-edit'),
     path('rate/delete/<int:pk>', views.RateUserDelete.as_view(), name='rating-delete'),
 

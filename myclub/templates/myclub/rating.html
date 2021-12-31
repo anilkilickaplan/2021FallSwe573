@@ -19,7 +19,7 @@
         </div>
         <div class="row justify-content-center mt-3">
             <div class="col-md-5 col-sm-12">
-                <h5>Rating!</h5>
+                <h5>Rating</h5>
             </div>
         </div>
         <div class="row justify-content-center mt-3 mb-5">
@@ -29,14 +29,14 @@
                         {% csrf_token %}
                         {{ form | crispy }}
                         <div class="d-grid gap-2">
-                            <button class="btn btn-success mt-3">Submit!</button>
+                            <button class="btn btn-success mt-3">Rate</button>
                         </div>
                     </form>
                 {% else %}
                     {% for record in ratingRecord %}
                         <b>You already rated.</b>
                         <p></p>
-                        <p><b>Rated service:</b> {{ record.service.name }}</p>
+                        <p><b>Rated offer:</b> {{ record.offer.offerName }}</p>
                         <p><b>Rated user:</b> {{ record.rated }}</p>
                         <p><b>Rating was:</b> {{ record.rating }}</p>
                         <p><b>Comment was:</b> {{ record.feedback }}</p>

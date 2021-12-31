@@ -4,14 +4,13 @@ from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import UserPassesTestMixin, LoginRequiredMixin
 from django.urls.base import reverse
-from django.views import View, generic
-from .models import Offer, OfferApplication, UserProfile, Event, Review, UserRatings
-from .forms import OfferApplicationForm, OfferForm, EventForm, RatingForm, ReviewForm
+from django.views import View
+from .models import EventApplication, Offer, OfferApplication, UserProfile, Event, Review, UserRatings
+from .forms import EventApplicationForm, OfferApplicationForm, OfferForm, EventForm, RatingForm, ReviewForm
 from django.views.generic.edit import UpdateView, DeleteView
-from datetime import datetime, timezone
-from django.http import HttpResponseRedirect, request
+import datetime
 from django.contrib import  messages
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.core.paginator import Paginator
 
@@ -112,15 +111,18 @@ class OfferDetailView(View):
         offer = Offer.objects.get(pk=pk)
         #form = OfferForm()
         # form = ReviewForm()
-
+        
+        current_time = datetime.datetime.now().time()
+        current_date = datetime.datetime.now()
         applications = OfferApplication.objects.filter(appliedOffer=pk).order_by('-applicationDate')
         applications_this = applications.filter(applicant=request.user)
         number_of_accepted = len(applications.filter(isApproved=True))
         accepted_applications = applications.filter(isApproved=True)
         application_number = len(applications)
         is_active = True
-        if offer.offerDate < timezone.now().date():
-            is_active = False
+        if offer.offerDate <= current_date.date():
+            if offer.offerTime < current_time:
+                is_active = False
         if len(applications) == 0:
             is_applied = False
             is_accepted = False
@@ -142,7 +144,9 @@ class OfferDetailView(View):
             'is_accepted': is_accepted,
             'is_active': is_active,
             'application_number': application_number,
-            'accepted_applications': accepted_applications
+            'accepted_applications': accepted_applications,
+            'current_time':current_time,
+            'current_date': current_date
         }
 
         return render(request, 'myclub/offer_detail.html', context)
@@ -177,9 +181,9 @@ class OfferDetailView(View):
                     new_application.save()
                     applicant_user_profile.UserReservehour = applicant_user_profile.userReservehour - offer.offerDuration
                     applicant_user_profile.save()
-                    messages.success(request, 'Offer created')
+                    messages.success(request, 'Your applied for the offer')
                 else:
-                    messages.warning(request, 'Insufficient credit')
+                    messages.warning(request, 'Please check your available credits')
 
         context = {
             'offer': offer,
@@ -301,21 +305,86 @@ class EventCreateView(LoginRequiredMixin, View):
 class EventDetailView(View):
     def get(self, request, pk, *args, **kwargs):
         event = Event.objects.get(pk=pk)
-        form = EventForm()
-        current_time = timezone.now().date()
+        #form = EventForm()
+        # form = ReviewForm()
 
+        applications = EventApplication.objects.filter(appliedEvent=pk).order_by('-applicationDate')
+        applications_this = applications.filter(applicant=request.user)
+        number_of_accepted = len(applications.filter(isApproved=True))
+        accepted_applications = applications.filter(isApproved=True)
+        application_number = len(applications)
+        is_active = True
+        if event.eventDate < timezone.now().date():
+            is_active = False
+        if len(applications) == 0:
+            is_applied = False
+            is_accepted = False
+        for application in applications:
+            if application.applicant == request.user:
+                is_applied = True
+                is_accepted = application.isApproved
+                break
+            else:
+                is_applied = False
+                is_accepted = False
 
         context = {
             'event': event,
-            'form': form,
-            'current_time': current_time
-
+            'applications': applications,
+            'number_of_accepted': number_of_accepted,
+            'is_applied': is_applied,
+            'applications_this': applications_this,
+            'is_accepted': is_accepted,
+            'is_active': is_active,
+            'application_number': application_number,
+            'accepted_applications': accepted_applications
         }
 
         return render(request, 'myclub/event_detail.html', context)
 
-    def post(self, request, *args, **kwargs):
-        pass
+    def post(self, request, pk, *args, **kwargs):
+       
+        event = Event.objects.get(pk=pk)
+        form = EventApplicationForm(request.POST)
+        applications = EventApplication.objects.filter(appliedEvent=pk).order_by('-applicationDate')
+        applications_this = applications.filter(applicant=request.user)
+        number_of_accepted = len(applications.filter(isApproved=True))
+        applicant_user_profile = UserProfile.objects.get(pk=request.user)
+   
+        if len(applications) == 0:
+            is_applied = False
+        for application in applications:
+            if application.applicant == request.user:
+                is_applied = True
+                break
+            else:
+                is_applied = False
+
+        if form.is_valid():
+
+            if is_applied == False:
+            
+                new_application = form.save(commit=False)
+                new_application.applicant = request.user
+                new_application.appliedEvent = event
+                new_application.isApproved = False
+                new_application.save()
+                applicant_user_profile.save()
+                messages.success(request, 'Your applied for the event')
+      
+
+        context = {
+            'event': event,
+            'form': form,
+            'applications': applications,
+            'number_of_accepted': number_of_accepted,
+            'is_applied': is_applied,
+            'applications_this': applications_this,
+        }
+
+        return redirect('event-detail', pk=event.pk) 
+
+
 
 
 class EventEditView(LoginRequiredMixin, UpdateView):
@@ -431,7 +500,7 @@ def searchEvents(request):
 
 
 
-def home(request, year=datetime.now().year, month=datetime.now().strftime('%B')):
+def home(request, year=datetime.datetime.now().year, month=datetime.datetime.now().strftime('%B')):
     return render (request, 'myclub/home.html', 
     {})
 
@@ -450,7 +519,7 @@ class myOffersView(View):
             
         if request.user.is_authenticated:
             # myoffers = Offer.objects.filter(offerOwner=me)
-            myoffers = Offer.objects.filter(offerOwner = request.user.id)
+            myoffers = Offer.objects.filter(offerOwner = request.user.id).order_by('-offerCreatedDate')
             return render(request, 
             'myclub/my_offers_list.html', 
             {'myoffers':myoffers})
@@ -539,7 +608,7 @@ class ConfirmOfferGiven(LoginRequiredMixin, View):
         return redirect('offer-detail', pk=pk)
 
 def CreditExchange(offer):
-    applications = OfferApplication.objects.filter(offer=offer.pk).filter(approved=True)
+    applications = OfferApplication.objects.filter(appliedOffer=offer.pk).filter(isApproved=True)
     if offer.is_taken == True:
         if offer.is_given == True:
             offer_giver = UserProfile.objects.get(pk=offer.offerOwner.pk)
@@ -569,6 +638,8 @@ class RateUser(LoginRequiredMixin, View):
             'form': form,
             'ratingRecord': ratingRecord,
             'isRated': isRated,
+            'rated': rated,
+            'offer': offer,
         }
 
         return render(request, 'myclub/rating.html', context)
@@ -596,6 +667,7 @@ class RateUserEdit(LoginRequiredMixin, View):
         form = RatingForm(instance = rating)     
         context = {
             'form': form,
+            'rating': rating,
         }
         return render(request, 'myclub/rating-edit.html', context)
 
@@ -608,7 +680,7 @@ class RateUserEdit(LoginRequiredMixin, View):
             rating.rating = edit_rating.rating
             rating.feedback = edit_rating.feedback
             rating.save()        
-            messages.success(request, 'Rating edit is successful.')
+            messages.success(request, 'Rating update is submitted')
 
         context = {
             'form': form,

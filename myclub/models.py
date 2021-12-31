@@ -18,9 +18,10 @@ class Offer(models.Model):
     offerDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
     offerLocation = models.CharField(max_length=100, blank=True, null=True)
     offerMap = PlainLocationField(default='41.031964, 29.008841', zoom=7, blank=False, null=False)
-    offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
+    offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(1),MaxValueValidator(100)])
     offerIsActive = models.BooleanField(default=True)
     is_taken = models.BooleanField(default=False)
+    is_given = models.BooleanField(default=False)
     offerPicture = models.ImageField(upload_to='uploads/offer_pictures/',default='uploads/offer_pictures/default.png', blank=True)
     offerCategory = models.TextField(max_length=100,blank=True)
     
@@ -45,7 +46,13 @@ class Event(models.Model):
 class OfferApplication(models.Model):
     applicationDate = models.DateTimeField(default=timezone.now)
     applicant = models.ForeignKey(User, on_delete=models.CASCADE)
-    appliedOffer= models.ForeignKey('Offer', on_delete=models.CASCADE)
+    appliedOffer = models.ForeignKey('Offer', on_delete=models.CASCADE)
+    isApproved = models.BooleanField(default=False)
+
+class EventApplication(models.Model):
+    applicationDate = models.DateTimeField(default=timezone.now)
+    applicant = models.ForeignKey(User, on_delete=models.CASCADE)
+    appliedEvent = models.ForeignKey('Event', on_delete=models.CASCADE)
     isApproved = models.BooleanField(default=False)
 
 class Review(models.Model):

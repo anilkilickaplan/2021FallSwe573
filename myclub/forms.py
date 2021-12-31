@@ -1,5 +1,5 @@
 from django import forms
-from .models import Offer, Event, OfferApplication, Review, UserRatings
+from .models import EventApplication, Offer, Event, OfferApplication, Review, UserRatings
 from django.forms.widgets import DateInput, TimeInput
 
 
@@ -7,8 +7,8 @@ from django.forms.widgets import DateInput, TimeInput
 choices = [('Technology','Technology'),
            ('Art','Art'),
            ('Culinary','Culinary'),
-           ('Literature','Literature'),
-           ('Finance','Finance')]
+           ('Finance','Finance'),
+           ('Business','Business')]
 
 class OfferForm(forms.ModelForm):
     class Meta:
@@ -59,6 +59,12 @@ class OfferApplicationForm(forms.ModelForm):
 
     class Meta:
         model = OfferApplication
+        fields = []
+
+class EventApplicationForm(forms.ModelForm):    
+
+    class Meta:
+        model = EventApplication
         fields = []
 
 class RatingForm(forms.ModelForm):

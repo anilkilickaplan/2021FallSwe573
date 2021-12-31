@@ -36,19 +36,19 @@
 
         <div class="card" style="width: 50rem;">    
             <div class="card-header"> {{ offer.offerName }} 
-                {% if request.user == offer.offerOwner %}
-                    {% if is_active %}
+                {% if is_active %}
+                    {% if request.user == offer.offerOwner %}
                         <span style="float:right;">
                             <a href="{% url 'offer-edit' offer.pk %}" style="color: rgb(55, 90, 247);">Edit Offer</a>
                             <a href="{% url 'offer-delete' offer.pk %}" style="color: rgb(245, 10, 10);">Delete Offer</a>
                         </span>
-                    {%else%}
-                     <span style="float:right;">
-                            <p>Offer is not active!</p>
-                     </span>
                     {% endif %}
-                    
+                {%else%}
+                    <span style="float:right;">
+                        <p style="color: rgb(245, 10, 10);">Past offers cannot be edited</p>
+                    </span>
                 {% endif %}
+                    
             </div> 
 
             <div class="card-body">
@@ -62,7 +62,7 @@
             <p>Description: {{ offer.offerDescription }}</p>
             <p>Date: {{ offer.offerDate }}</p>
             <p>Time: {{ offer.offerTime }}</p>
-            <p>Event Capacity: {{ offer.offerCapacity }}</p>
+            <p>Offer Capacity: {{ offer.offerCapacity }}</p>
                 <div>
                     <input style="visibility: hidden; height: 0px; margin: 0px;" type="text" 
                     name="location" value={{ offer.offerMap }} required id="id_location" 
@@ -194,9 +194,6 @@
                         </table>
 
             {% endif %}
-
-
-
         {% endif %}
        
     </div>
