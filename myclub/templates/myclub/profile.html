@@ -1,97 +1,83 @@
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
+    <!-- Bootstrap Font Icon CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+</head>
 {% extends 'landing/base.html' %}
 
 {% block content %}
-</br>
-</br>
+</br></br>
 
+{% if profile.user == request.user %}
+<center><h1>My Profile</h2></center>
+</br>   
 
- 
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-1"></div>
+{% else %}
+<center><h1>Profile</h2></center>
+</br>   
+{% endif %}
 
-        <div class="col-md-7">
-            <div class="card shadow-sm col-md-8 col-sm-12 border-bottom px-5 pt-3">
-
-                {% if profile.userName %}
-                    <h3 class="py-4">{{ profile.userName }}</h3> 
-                {% else %}
-                    <h3 class="py-4">{{ user.username }} </h3>
-                {% endif %}
-                            
-                <span>
-                    {% if request.user == user %}
-                    <span style="float:right;"> 
-                        <a href="{% url 'profile-edit' profile.pk %}" style="color: rgb(0, 16, 233);">Edit</a>
-                    {% endif %}
-                    </span>
-                </span>
-                <img src="{{ profile.userPicture.url }}" class="rounded-circle" width="100" height="100" />
-
-                <p>Birth Location: {{ profile.userLocation }}</p>
-                <p>Birth Date: {{ profile.userBirthDate }}</p>
-                <p>Bio: {{ profile.userBio }}</p>
-                {% if request.user == user %}
-                    <p><a style="font-weight: bolder;">Your credit: </a>{{ profile.userCredits }}</p>
-                {% endif %}
-             
-
-
-                <!-- <div class="mb-3">
-                {% if number_of_followers == 0 %}
-                     <a href="#">No followers yet!</a>
-                {% else %}
-                     <a href="{% url 'followers' profile.pk %}">Followers: {{ number_of_followers }}</a>
-                {% endif %} -->
-
-               
-                {% if user == request.user %}
-                {% else %}
-                    {% if is_following %}
-                        <form method="POST" action="{% url 'remove-userfollower' profile.pk %}">
-                            {% csrf_token %}
-                            <button class="btn btn-outline-danger" type=submit>UnFollow</button>
-                        </form>
-                    {% else %}
-                        <form method="POST" action="{% url 'add-userfollower' profile.pk %}">
-                            {% csrf_token %}
-                            <button class="btn btn-outline-dark" type=submit>Follow</button>
-                        </form>
-                    {% endif %}
-                {% endif %}
-            </div>
-        </div>
-
-        <div class="col-md-3"> 
-    
-            {% if profile.user == request.user %}
-
+<div class="row">
+    <div class="col d-flex justify-content-center">
+        <div class="card w-45 h-100">
+          <div class="card-body">
+            {% if profile.userName %}
+                <h5 class="card-title">{{ profile.userName }}</h5> 
             {% else %}
-            
-                {% for follower in followers %}
-                <tbody>
-                    <tr>
-                        <td><img src="{{ follower.profile.user.userPicture.url }}" 
-                                class="rounded-circle" width="50" height="50" /></td>
-                        <td><a class="btn btn-primary mt-3" href="{% url 'profile' follower.profile.pk %}">
-                            {{application_done.applicant.profile.user.username}}</a></td>
-                    </tr>
-                </tbody>
-                 {% endfor %}
+                <h5 class="card-title">{{ user.username }} </h5>
+            {% endif %}
+                    
+            <span>
+            {% if request.user == user %}
+            <span style="float:right;"> 
+                <!-- <button class="btn btn-dark" type=submit>Edit your profile</button> -->
+                <a class="btn btn-dark" href="{% url 'profile-edit' profile.pk %}"  
+                    role="button" aria-pressed="true">Edit</a>
+            </span>
+            {% else %}
+                {% if is_following %}
+                    <form method="POST" action="{% url 'remove-userfollower' request.user.pk profile.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-dark" type=submit>Unfollow</button>
+                    </form>
+                {% else %}
+                        <form method="POST" action="{% url 'add-userfollower' request.user.pk profile.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-outline-dark" type=submit>Follow</button>
+                    </form>
+                {% endif %}
             {% endif %}
 
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th scope="col" ></th>
-                    <th scope="col" >Username</th>
-                </tr>
-                </thead>
-               
-            </table>
-    
+            {% if ratings_average.rating__avg != none %}
+            <p><a style="font-weight: bolder;">Rating: </a>{{ ratings_average.rating__avg }}</p>
+            {% endif %}
+            
+            <img src="{{ profile.userPicture.url }}" class="rounded-circle" width="100" height="100" />
+            </br> 
+                {% if number_of_followers > 0 %}
+                    <a href="{% url 'followers' profile.pk %}"> Followers: {{ number_of_followers }}</a>
+                {% else %}
+                    <p> No followers, yet!</p>
+                {% endif %}
+            <p>Birth Location: {{ profile.userLocation }}</p>
+            <p>Birth Date: {{ profile.userBirthDate }}</p>
+            <p>Bio: {{ profile.userBio }}</p>
+            {% if request.user == user %}
+                <p><a style="font-weight: bolder;">Your available credits: </a>{{ profile.userCredits }}</p>
+                <i class="bi bi-info-circle-fill">Available credits: Duration of any applied offer must be lower or 
+                    equal to your available credits</i>
+                </br></br>
+                <p><a style="font-weight: bolder;">Your on hold credits: </a>{{ profile.userReservehour }}</p>
+                <i class="bi bi-info-circle-fill">On hold credits are equal to duration of applied hours (-) or the offers you own (+)</i>                  
+
+            {% endif %}
+         
+          </div>
         </div>
-    </div>
+      </div>
+</div>
 
-
+<div class="row">
+</div>
 
 {% endblock content %}

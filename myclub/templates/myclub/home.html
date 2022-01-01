@@ -4,13 +4,14 @@
 {% block content %}
 <center>
     <br/><br>
-    {% if profile.userName %}
-       <h3 class="py-4">Hello {{ user.profile.userName }}</h3> 
+    <!-- {%include 'landing/colourflow.html' %} -->
+
+    {% if user.profile.userName %}
+       <h1 class="py-4">Hello {{ user.profile.userName }}</h3> 
     {% else %}
-      <h3 class="py-4">Hello {{ user.username }} </h3>
+      <h1 class="py-4">Hello {{ user.username }} </h3>
     {% endif %}
     
-    <h2>    This is the home page.</h2>
         
     <br/><br><br><br><br>
    
@@ -18,8 +19,8 @@
   <div class="col-sm-6">
     <div class="card w-75 h-100">
       <div class="card-body">
-        <h5 class="card-title">Your events</h5>
-        <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+        <h5 class="card-title">Events</h5>
+        <p class="card-text">Check out the available events in Socialclub</p>
         <a href="{% url 'event-list' %}" class="btn btn-dark">Discover events</a>
       </div>
     </div>
@@ -27,15 +28,8 @@
   <div class="col-sm-6">
     <div class="card w-75 h-100">
       <div class="card-body">
-        <h5 class="card-title">Your offers</h5>
-        <p class="card-text">If Offer attendee, 
-                                then if multiple link 
-                                        go to My Offers,
-                                      else
-                                        show offer detail
-                              else
-                                Discover offers
-                                         </p>
+        <h5 class="card-title">Offers</h5>
+        <p class="card-text">Check out the available offers in Socialclub </p>
         <a href="{% url 'offer-list' %}" class="btn btn-dark">Discover offers</a>
       </div>
     </div>

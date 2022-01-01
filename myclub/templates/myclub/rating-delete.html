@@ -1,7 +1,7 @@
 {% extends 'landing/base.html' %}
-{% load crispy_forms_tags %}
 
 {% block content %}
+
 {% if messages %}
 <ul class="messages">
     {% for message in messages %}
@@ -9,29 +9,24 @@
     {% endfor %}
 </ul>
 {% endif %}
+
 <div class="container">
     <div class="row mt-5">
-        <div class="col-md-5 col-sm-6">
-            <a href="{% url 'profile' object.pk %}" class="btn btn-light">Back</a>
-        </div>
-    </div>
-    <div class="row justify-content-center mt-3">
-        <div class="col-md-5 col-sm-12 border-bottom">
-            <h5>Update Your Profile</h5>
+        <div class="col-md-3 col-sm-6">
+            <a onClick="javascript:history.go(-1);" class="btn btn-light">Back</a>
         </div>
     </div>
     <div class="row justify-content-center mt-3 mb-5">
         <div class="col-md-5 col-sm-12 border-bottom">
-            <form method="POST" enctype="multipart/form-data">
-                <img src="{{ profile.userPicture.url }}" class="rounded-circle" width="100" height="100" />
-
+            <form method="POST">
                 {% csrf_token %}
-                {{ form | crispy }}
+                <h5>Delete Rating</h5>
+                <p>Please confirm you want to delete the rating.</p>
                 <div class="d-grid gap-2">
-                    <button class="btn btn-dark mt-3">Update Profile</button>
+                    <button class="btn btn-danger mt-3">Delete</button>
                 </div>
             </form>
-        </div>
+    </div>
     </div>
 </div>
 {% endblock content %}

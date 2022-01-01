@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.core.validators import MinValueValidator, MaxValueValidator
-
+from location_field.models.plain import PlainLocationField
 
 
 
@@ -17,9 +17,11 @@ class Offer(models.Model):
     offerTime = models.TimeField(null=False,default=timezone.now)
     offerDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
     offerLocation = models.CharField(max_length=100, blank=True, null=True)
-    offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(3),MaxValueValidator(100)])
+    offerMap = PlainLocationField(default='41.031964, 29.008841', zoom=7, blank=False, null=False)
+    offerCapacity = models.IntegerField(default=10, validators=[MinValueValidator(1),MaxValueValidator(100)])
     offerIsActive = models.BooleanField(default=True)
     is_taken = models.BooleanField(default=False)
+    is_given = models.BooleanField(default=False)
     offerPicture = models.ImageField(upload_to='uploads/offer_pictures/',default='uploads/offer_pictures/default.png', blank=True)
     offerCategory = models.TextField(max_length=100,blank=True)
     
@@ -30,6 +32,7 @@ class Event(models.Model):
     eventName = models.TextField()
     eventDescription = models.TextField()
     eventLocation = models.CharField(max_length=100, blank=True, null=True)
+    eventMap = PlainLocationField(default='41.031964, 29.008841', zoom=7, blank=False, null=False)
     eventDate = models.DateField(default=timezone.now)
     eventTime = models.TimeField(default=timezone.now)
     eventDuration = models.IntegerField(default=1, validators=[MinValueValidator(1),MaxValueValidator(5)])    
@@ -43,7 +46,13 @@ class Event(models.Model):
 class OfferApplication(models.Model):
     applicationDate = models.DateTimeField(default=timezone.now)
     applicant = models.ForeignKey(User, on_delete=models.CASCADE)
-    appliedOffer= models.ForeignKey('Offer', on_delete=models.CASCADE)
+    appliedOffer = models.ForeignKey('Offer', on_delete=models.CASCADE)
+    isApproved = models.BooleanField(default=False)
+
+class EventApplication(models.Model):
+    applicationDate = models.DateTimeField(default=timezone.now)
+    applicant = models.ForeignKey(User, on_delete=models.CASCADE)
+    appliedEvent = models.ForeignKey('Event', on_delete=models.CASCADE)
     isApproved = models.BooleanField(default=False)
 
 class Review(models.Model):
@@ -71,7 +80,12 @@ class UserProfile(models.Model):
 
 #class Friendship(models.Model)
 
-
+class UserRatings(models.Model):
+    rated = models.ForeignKey(User, verbose_name='user', related_name='rated', on_delete=models.CASCADE)
+    rater = models.ForeignKey(User, verbose_name='user', related_name='rater', on_delete=models.SET_NULL, null=True)
+    rating = models.IntegerField(blank=False, null=True)
+    offer = models.ForeignKey('Offer', on_delete=models.CASCADE)
+    feedback = models.TextField(blank=True, null=True)
 
 
 @receiver(post_save, sender=User)

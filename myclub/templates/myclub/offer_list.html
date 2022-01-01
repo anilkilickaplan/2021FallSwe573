@@ -18,11 +18,9 @@
         <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
           <option selected>Choose a category</option>
           <option value="1">Art</option>
-          <option value="3">Food</option>
-          <option value="2">Tech</option>
-          <option value="3">Literature</option>
-          <option value="3">Music</option>
-          <option value="3">Finance</option>
+          <option value="2">Food</option>
+          <option value="3">Technology</option>
+          <option value="4">Finance</option>
         </select>
         <label for="floatingSelect">Choose category</label>
     </div>
@@ -66,7 +64,7 @@
 
                             </div>
                             <div class="col-lg-6 tags p-b-2">
-                                <p class><strong>Hosted by {{offer.offerOwner}}</strong></p>
+                                <p class><strong>Hosted by {{offer.offerOwner.profile.userName}}</strong></p>
                                 {% if offer.offerCategory != ""%}
                                     <p class>Category: {{offer.offerCategory}} </p>
                                 {% else %}

@@ -31,8 +31,8 @@ urlpatterns = [
 
     # Followers
     path('profile/<int:pk>/userfollowers/', views.FollowersListView.as_view(), name='followers'),
-    path('profile/<int:pk>/userfollowers/add', views.AddFollower.as_view(), name='add-userfollower'),
-    path('profile/<int:pk>/userfollowers/remove', views.RemoveFollower.as_view(), name='remove-userfollower'),
+    path('profile/<int:pk>/userfollowers/add/<int:followpk>', views.AddFollower.as_view(), name='add-userfollower'),
+    path('profile/<int:pk>/userfollowers/remove/<int:followpk>', views.RemoveFollower.as_view(), name='remove-userfollower'),
     path('userfollowers/remove/<int:userfollower_pk>', views.RemoveMyFollower.as_view(), name='remove-my-userfollower'),
 
     # APPLICATIONS
@@ -41,7 +41,10 @@ urlpatterns = [
     path('offer/<int:pk>/confirmtaken/', views.ConfirmOfferTaken.as_view(), name='confirm-offer-taken'),
     path('offer/<int:pk>/confirmgiven/', views.ConfirmOfferGiven.as_view(), name='confirm-offer-given'),
 
-    
+    #RATING and REVIEW
+    path('rate/<int:offerpk>/<int:ratedpk>', views.RateUser.as_view(), name='rateuser'),
+    path('rate/edit/<int:pk>', views.RateUserEdit.as_view(), name='rating-edit'),
+    path('rate/delete/<int:pk>', views.RateUserDelete.as_view(), name='rating-delete'),
 
 
 
