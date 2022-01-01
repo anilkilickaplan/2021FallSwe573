@@ -152,7 +152,8 @@
                                     {% if event.eventCapacity ==  number_of_accepted %}
                                     {% else %}
                                         <!-- <td><i class="fa-solid fa-hourglass"></i></td> -->
-                                        <td class="table-warning"><a href="{% url 'application-edit' event.pk application_done.pk %}" class="btn btn-success">Approve</a>
+                                        <td class="table-warning"><a href="{% url 'application-edit' event.pk application_done.pk %}" 
+                                            class="btn btn-success"><i class="fas fa-check"></i>Approve</a>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
