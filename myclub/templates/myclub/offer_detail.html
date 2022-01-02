@@ -82,6 +82,19 @@
             </div>
         
             {% if offer.offerOwner == request.user %}
+                {% if is_active == False %}  
+                    {% if offer.is_given == False %}
+                        <form method="POST" action="{% url 'confirm-offer-given' offer.pk %}">
+                            {% csrf_token %}
+                            <div class="d-grid gap-2">
+                                <button class="btn btn-success mt-3" type=submit>Confirm offer is given</button>
+                            </div>
+                        </form>
+                    {% endif %}
+                {% endif %}
+            
+            
+            
             {% else %}
                 {% if is_applied %}
                     {% if is_accepted %}
@@ -95,6 +108,8 @@
                                         <button class="btn btn-success mt-3" type=submit>Confirm Offer Taken</button>
                                     </div>
                                 </form>
+                                
+
                             {% else %}
                                 <p>You confirmed application is received.</p>
                                 <a class="btn btn-primary mt-3" href="{% url 'rateuser' offer.pk offer.offerOwner.pk %}">Rating</a>
@@ -131,23 +146,25 @@
                         {% endif %}
                     </form>
                 {% endif %}
-        {% endif %}
-
-
-        <!-- <p style="font-weight: bolder;">Ratings:</p>
-        {% for application_done in applications %}
-        <div class="row justify-content-center">
-            <div class="border-bottom">
-                <a style="text-decoration: none; vertical-align: middle;" class="text-primary" 
-                href="{% url 'profile' application_done.applicant.profile.pk %}">{{ application_done.applicant }} &nbsp; &nbsp; &nbsp; </a>
-                {% if application_done.isApproved %}
-                <a class="btn btn-primary mt-3" href="{% url 'rateuser' offer.pk application_done.applicant.profile.user.pk %}">Rating</a>
-                {% endif %}
-            </div>
+            {% endif %}
         </div>
-        {% endfor %} -->
 
+
+        <div class="list-group">
+            {% for comment in comments %}
+                <a href="{% url 'profile' comment.rater.profile.pk %}" class="list-group-item list-group-item-action align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Attendee: {{comment.rater}}</h5>
+                    <small>Rating: {{comment.rating}}</small>
+                </div>
+                <p class="mb-1">{{ comment.feedback }}</p>
+                <small>Comment date: {{ comment.ratingDate }}</small>
+                </a>
+            {%endfor%}
         </div>
+
+
+        
     </div>
 
    
@@ -195,10 +212,12 @@
                         {% else %}
                             {% if application_done.isApproved %}
                                 <td><i class="fa-solid fa-circle-check"></i>Approved</td>
-                                <td><a class="text-primary" 
-                                    href="{% url 'rateuser' offer.pk application_done.applicant.profile.user.pk %}">
-                                    Rating</a>
-                                </td>
+                                {% if offer.is_given %}
+                                    <td><a class="text-primary" 
+                                        href="{% url 'rateuser' offer.pk application_done.applicant.profile.user.pk %}">
+                                        Rating</a>
+                                    </td>
+                                {% endif %}      
                             {% else %}
                                 <td><i class="fa-solid fa-circle-check"></i>Not Approved</td>
                             {% endif %}                                 
