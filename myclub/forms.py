@@ -4,7 +4,8 @@ from django.forms.widgets import DateInput, TimeInput
 
 
 
-choices = [('Technology','Technology'),
+choices = [('General','General'),
+           ('Technology','Technology'),
            ('Art','Art'),
            ('Culinary','Culinary'),
            ('Finance','Finance'),

@@ -2,6 +2,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css">
     <!-- Bootstrap Font Icon CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
 </head>
 {% extends 'landing/base.html' %}
 
@@ -47,21 +48,26 @@
                     </form>
                 {% endif %}
             {% endif %}
-
+            <!-- RATING SECTION -->
             {% if ratings_average.rating__avg != none %}
             <p><a style="font-weight: bolder;">Rating: </a>{{ ratings_average.rating__avg }}</p>
             {% endif %}
             
             <img src="{{ profile.userPicture.url }}" class="rounded-circle" width="100" height="100" />
             </br> 
-                {% if number_of_followers > 0 %}
-                    <a href="{% url 'followers' profile.pk %}"> Followers: {{ number_of_followers }}</a>
-                {% else %}
-                    <p> No followers, yet!</p>
-                {% endif %}
+            <!-- FOLLOWER SECTION -->
+            {% if number_of_followers > 0 %}
+                <a href="{% url 'followers' profile.pk %}"> Followers: {{ number_of_followers }}</a>
+            {% else %}
+                <p> No followers, yet!</p>
+            {% endif %}
+
+            <!-- PROFILE SECTION -->
             <p>Birth Location: {{ profile.userLocation }}</p>
             <p>Birth Date: {{ profile.userBirthDate }}</p>
             <p>Bio: {{ profile.userBio }}</p>
+
+            <!-- CREDITS SECTION -->
             {% if request.user == user %}
                 <p><a style="font-weight: bolder;">Your available credits: </a>{{ profile.userCredits }}</p>
                 <i class="bi bi-info-circle-fill">Available credits: Duration of any applied offer must be lower or 
