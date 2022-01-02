@@ -13,6 +13,8 @@ from django.contrib import  messages
 from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.core.paginator import Paginator
+from geopy.geocoders import Nominatim
+
 
 
 
@@ -25,7 +27,9 @@ class OfferListView(LoginRequiredMixin, View):
         form = OfferForm()
 
         if searchOffer is not None:
-            offers  = offers.filter(offerName__icontains = searchOffer) 
+            offers  = offers.filter(Q (offerName__icontains = searchOffer) | 
+                                    Q (offerDescription__icontains = searchOffer)|
+                                    Q (offerCategory__icontains = searchOffer) ) 
             if offers is None:
                 messages.warning(request,"No match with the keyword")
         
@@ -93,11 +97,12 @@ class OfferCreateView(LoginRequiredMixin, View):
                 owner_profile.userReservehour = owner_profile.userReservehour + new_offer.offerDuration
                 owner_profile.save()
                 new_offer.save()
+                
                 messages.success(request,'Offer is created')
             else:
                 messages.warning(request, 'Your credits and pending offer durations cannot exceed 15.')
         else:
-            messages.warning(request, 'Form is not valid')
+            messages.warning(request, 'Form is not valid, please check the values')
 
        
         myoffers = Offer.objects.filter(offerOwner = request.user)
@@ -134,6 +139,10 @@ class OfferDetailView(View):
             else:
                 is_applied = False
                 is_accepted = False
+       
+        geolocator = Nominatim(user_agent = "app.name")
+        offerAddress= geolocator.reverse(offer.offerMap)
+                
 
         context = {
             'offer': offer,
@@ -146,7 +155,8 @@ class OfferDetailView(View):
             'application_number': application_number,
             'accepted_applications': accepted_applications,
             'current_time':current_time,
-            'current_date': current_date
+            'current_date': current_date,
+            'offerAddress': offerAddress.address,
         }
 
         return render(request, 'myclub/offer_detail.html', context)
@@ -301,7 +311,6 @@ class EventCreateView(LoginRequiredMixin, View):
 
         # return redirect('myevents-list')
 
-
 class EventDetailView(View):
     def get(self, request, pk, *args, **kwargs):
         event = Event.objects.get(pk=pk)
@@ -384,9 +393,6 @@ class EventDetailView(View):
 
         return redirect('event-detail', pk=event.pk) 
 
-
-
-
 class EventEditView(LoginRequiredMixin, UpdateView):
     def get(self, request, *args, pk, **kwargs):
         event = Event.objects.get(pk=pk)
@@ -432,7 +438,6 @@ class EventDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     def test_func(self):
         event = self.get_object()
         return self.request.user == event.eventOwner
-
 
 # USER PROFILE RELATED
 class ProfileView(View):
