@@ -14,6 +14,7 @@ from django.shortcuts import render, redirect
 from django.utils import timezone
 from django.core.paginator import Paginator
 from geopy.geocoders import Nominatim
+from django.db.models import Avg
 
 
 
@@ -23,15 +24,34 @@ from geopy.geocoders import Nominatim
 class OfferListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         searchOffer= request.GET.get('q')
+        offer_list_category = request.GET.get('offer_list_category')
         offers = Offer.objects.all().order_by('-offerCreatedDate')
         form = OfferForm()
 
-        if searchOffer is not None:
+        try:
+            searchOffer = self.request.GET['q']
+            offer_list_category = self.request.GET['offer_list_category']
+        except:
+            searchOffer = ''
+            offer_list_category='General'
+
+        if searchOffer != '':
             offers  = offers.filter(Q (offerName__icontains = searchOffer) | 
                                     Q (offerDescription__icontains = searchOffer)|
                                     Q (offerCategory__icontains = searchOffer) ) 
-            if offers is None:
+            if offers =='':
                 messages.warning(request,"No match with the keyword")
+
+        if offer_list_category != '':
+            offers  = offers.filter(offerCategory = offer_list_category) 
+            if offers =='':
+                messages.warning(request,"No match with the category")
+        
+        if searchOffer =='' and offer_list_category=='General':
+            offers = Offer.objects.all().order_by('-offerCreatedDate') 
+            
+            
+
         
         paginator = Paginator(offers, 5) # Show 25 contacts per page.
 
@@ -47,33 +67,6 @@ class OfferListView(LoginRequiredMixin, View):
         return render(request, 'myclub/offer_list.html', context)
 
 
-    # def get_queryset(self):
-    #     offers = Offer.objects.all().order_by('-offerCreatedDate')
-    #     form = OfferForm()
-    #     paginator = Paginator(offers, 5) # Show 25 contacts per page.
-
-    #     page_number = request.GET.get('page')
-    #     page_obj = paginator.get_page(page_number)
-        
-       
-    #     try:
-    #         keyword = self.request.GET['q']
-    #     except:
-    #         keyword = ''
-    #     if (keyword != ''):
-    #         offers = self.model.objects.filter(
-    #             Q(content__icontains=keyword) | Q(title__icontains=keyword))
-    #     else:
-    #         offers = self.model.objects.all()
-
-    #     context = {
-    #         'offer_list': offers,
-    #         'form': form,
-    #         'page_obj': page_obj
-    #     }
-
-
-    #     return render(request, 'myclub/offer_list.html', context)
   
 class OfferCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -125,6 +118,9 @@ class OfferDetailView(View):
         accepted_applications = applications.filter(isApproved=True)
         application_number = len(applications)
         is_active = True
+        comments = UserRatings.objects.filter(offer=offer)
+
+
         if offer.offerDate <= current_date.date():
             if offer.offerTime < current_time:
                 is_active = False
@@ -157,6 +153,8 @@ class OfferDetailView(View):
             'current_time':current_time,
             'current_date': current_date,
             'offerAddress': offerAddress.address,
+            'comments': comments
+
         }
 
         return render(request, 'myclub/offer_detail.html', context)
@@ -183,13 +181,13 @@ class OfferDetailView(View):
 
             if is_applied == False:
                 totalcredit = applicant_user_profile.userReservehour + applicant_user_profile.userCredits
-                if totalcredit > offer.offerDuration:
+                if totalcredit >= offer.offerDuration:
                     new_application = form.save(commit=False)
                     new_application.applicant = request.user
                     new_application.appliedOffer = offer
                     new_application.isApproved = False
                     new_application.save()
-                    applicant_user_profile.UserReservehour = applicant_user_profile.userReservehour - offer.offerDuration
+                    applicant_user_profile.userReservehour = applicant_user_profile.userReservehour - offer.offerDuration
                     applicant_user_profile.save()
                     messages.success(request, 'Your applied for the offer')
                 else:
@@ -261,15 +259,32 @@ class OfferDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
 class EventListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         searchEvent= request.GET.get('q')
+        event_list_category = request.GET.get('offer_list_category')
         events = Event.objects.all().order_by('-eventCreatedDate')
         form = EventForm()
         current_time = timezone.now().date()
         
-        if searchEvent is not None:
-            events  = events.filter(eventName__icontains = searchEvent) 
-            if events is None:
+        try:
+            searchEvent = self.request.GET['q']
+            event_list_category = self.request.GET['event_list_category']
+        except:
+            searchEvent = ''
+            event_list_category='General'
+
+        if searchEvent != '':
+            events  = events.filter(Q (eventName__icontains = searchEvent) | 
+                                    Q (eventDescription__icontains = searchEvent)|
+                                    Q (eventCategory__icontains = searchEvent) ) 
+            if events =='':
                 messages.warning(request,"No match with the keyword")
- 
+
+        if event_list_category != '':
+            events  = events.filter(eventCategory= event_list_category)
+            if events =='':
+                messages.warning(request,"No match with the category")
+        
+        if searchEvent =='' and event_list_category=='General':
+            events = Event.objects.all().order_by('-eventCreatedDate') 
 
         paginator = Paginator(events, 5) # Show 25 contacts per page.
 
@@ -445,6 +460,9 @@ class ProfileView(View):
         profile = UserProfile.objects.get(pk=pk)
         user = profile.user
         userfollowers = user.userfollowers.all()
+        ratings_average = UserRatings.objects.filter(rated=profile.user).aggregate(Avg('rating'))
+        comments = UserRatings.objects.filter(rated=profile.user)
+
         if len(userfollowers) == 0:
             is_following = False
         for follower in userfollowers:
@@ -460,7 +478,10 @@ class ProfileView(View):
             'user': user,
             'profile': profile,
             'number_of_followers': number_of_followers,
-            'is_following': is_following
+            'is_following': is_following,
+            'ratings_average': ratings_average,
+            'comments': comments
+
         }
         return render(request, 'myclub/profile.html', context)
 

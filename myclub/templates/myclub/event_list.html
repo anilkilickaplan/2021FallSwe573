@@ -15,13 +15,12 @@
     </br></br></br></br>
 
     <div class="form-floating" style="width: 20rem;">
-        <select class="form-select" id="floatingSelect" aria-label="Floating label select example">
-          <option selected>Choose a category</option>
-          <option value="1">All Categories</option>
-          <option value="2">Art</option>
-          <option value="3">Food</option>
-          <option value="4">Technology</option>
-          <option value="5">Finance</option>
+        <select class="form-select" name= "search_list_category" id="floatingSelect" aria-label="Floating label select example">
+            <option value="General">All Categories</option>
+            <option value="Art">Art</option>
+            <option value="Food">Food</option>
+            <option value="Technology">Technology</option>
+            <option value="Finance">Finance</option>
         </select>
         <label for="floatingSelect">Choose category</label>
     </div>
@@ -39,7 +38,6 @@
 <div class="col-md-5" style="float:none;margin:auto;">
 
     <center><h1>Events List</h2></center>
-    <center><h6>Suggested events near {{request.userlocation}}</h6></center>
 </br>
 
 
@@ -67,8 +65,22 @@
                             <div class="col-lg-6 tags p-b-2">
                                 <p class><strong>Hosted by {{event.eventOwner.profile.userName}}</strong></p>
                                 {% if event.eventCategory != ""%}
-                                    <p class>Category: {{event.eventCategory}} </p>
+                                    {% if event.eventCategory == 'General' %}
+                                        <span class="badge bg-success">General</span>
+                                    {% elif event.eventCategory == 'Art' %}
+                                        <span class="badge bg-warning">Art</span>
+                                    {% elif event.eventCategory == 'Food' %}
+                                        <span class="badge bg-danger">Food</span>
+                                    {% elif event.eventCategory == 'Technology' %}
+                                        <span class="badge bg-info">Technology</span>
+                                    {% elif event.eventCategory == 'Finance' %}
+                                        <span class="badge bg-success">Finance</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ event.eventCategory }}</span>
+                                    {% endif %} 
+                         
                                 {% else %}
+                                    <span class="badge bg-primary">General</span>
                                 {% endif %} 
                                 <!-- <p class="card-text">Description: {{ event.eventDescription }}</p> -->
                                 <p class="card-text">Location: {{ event.eventLocation }}</p> 

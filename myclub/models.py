@@ -7,8 +7,6 @@ from django.dispatch import receiver
 from django.core.validators import MinValueValidator, MaxValueValidator
 from location_field.models.plain import PlainLocationField
 
-
-
 class Offer(models.Model):
     offerOwner = models.ForeignKey(User, on_delete=models.CASCADE)
     offerCreatedDate = models.DateTimeField(default=timezone.now)
@@ -25,7 +23,6 @@ class Offer(models.Model):
     is_given = models.BooleanField(default=False)
     offerPicture = models.ImageField(upload_to='uploads/offer_pictures/',default='uploads/offer_pictures/default.png', blank=True)
     offerCategory = models.TextField(max_length=20,blank=True)
-    
 
 class Event(models.Model):
     eventOwner = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -41,8 +38,6 @@ class Event(models.Model):
     eventIsActive = models.BooleanField(default=True)
     eventPicture = models.ImageField(upload_to='uploads/event_pictures/', default='uploads/event_pictures/default.png', blank=True)
     eventCategory = models.TextField(max_length=20,blank=True)
-
-
     
 class OfferApplication(models.Model):
     applicationDate = models.DateTimeField(default=timezone.now)
@@ -75,25 +70,18 @@ class UserProfile(models.Model):
     userFollowers = models.ManyToManyField(User, blank=True, related_name='userfollowers')
     userCredibility = models.IntegerField(null= True)
 
-#class OfferAttendees(models.Model):
-
-#class EventAttendees(models.Model):
-
-#class Friendship(models.Model)
-
 class UserRatings(models.Model):
     rated = models.ForeignKey(User, verbose_name='user', related_name='rated', on_delete=models.CASCADE)
     rater = models.ForeignKey(User, verbose_name='user', related_name='rater', on_delete=models.SET_NULL, null=True)
     rating = models.IntegerField(blank=False, null=True)
     offer = models.ForeignKey('Offer', on_delete=models.CASCADE)
     feedback = models.TextField(blank=True, null=True)
-
+    ratingDate =models.DateTimeField(default=timezone.now)
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
-
 
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
