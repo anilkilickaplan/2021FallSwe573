@@ -16,34 +16,36 @@
     <div class="col-md-7">
     </br></br></br>
 
-        <div class="card" style="width: 50rem;">    
-            <div class="card-header"> {{ event.eventName }} 
+    <div class="card" style="width: 50rem;">    
+        <div class="card-header"> {{ event.eventName }} 
+            {% if is_active %}
                 {% if request.user == event.eventOwner %}
-                    {% if is_active %}
-                        {% if event.eventTime >= current_time  %}
-                            <span style="float:right;">
-                                <a href="{% url 'event-edit' event.pk %}" style="color: rgb(55, 90, 247);">Edit Event</a>
-                                <a href="{% url 'event-delete' event.pk %}" style="color: rgb(245, 10, 10);">Delete Event</a>
-                            </span>
-                        {%else%}
-                            <span style="float:right;">
-                                <p style="color: rgb(245, 10, 10);">Past event</p>
-                            </span>
-                        {% endif %}
-                    {%else%}
-                        <span style="float:right;">
-                            <p>Past event</p>
-                        </span>
-                    {% endif %}
-                    
+                    <span style="float:right;">
+                        <a href="{% url 'event-edit' event.pk %}" style="color: rgb(55, 90, 247);">Edit Event</a>
+                        <a href="{% url 'event-delete' event.pk %}" style="color: rgb(245, 10, 10);">Delete Event</a>
+                    </span>
                 {% endif %}
-            </div> 
+            {%else%}
+                {% if request.user == event.eventOwner %}
+                    <span style="float:right;">
+                        <p style="color: rgb(245, 10, 10);">Past events cannot be edited</p>
+                    </span>
+                {%else%}
+                    <span style="float:right;">
+                        <p style="color: rgb(245, 10, 10);">You missed the event</p>
+                    </span>
+                {% endif %}
+
+            {% endif %}
+                
+        </div> 
+
 
             <div class="card-body">
                 <h5>  </h5>
             <p class="card-text"></p>
             <!-- <img src="{{ event.eventPicture.url }}" width="100" height="100" /> -->
-            <img class="img-fluid rounded" src="{{event.eventPicture.url}}" alt="" width="400" height="200">
+            <h1><img class="w3-round" src="{{event.eventPicture.url}}" alt="" style="width:100%"></h1>
 
             <p> <a href="{% url 'profile' event.eventOwner.profile.pk %}">Hosted by {{event.eventOwner.profile.userName}}</a> </p>
             <p>Duration: {{ event.eventDuration }}</p>

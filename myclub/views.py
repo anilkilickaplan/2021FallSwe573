@@ -49,10 +49,7 @@ class OfferListView(LoginRequiredMixin, View):
         
         if searchOffer =='' and offer_list_category=='General':
             offers = Offer.objects.all().order_by('-offerCreatedDate') 
-            
-            
 
-        
         paginator = Paginator(offers, 5) # Show 25 contacts per page.
 
         page_number = request.GET.get('page')
@@ -67,8 +64,6 @@ class OfferListView(LoginRequiredMixin, View):
         return render(request, 'myclub/offer_list.html', context)
 
 
-
-  
 class OfferCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         form = OfferForm()
@@ -304,7 +299,7 @@ class EventListView(LoginRequiredMixin, View):
 
 class EventCreateView(LoginRequiredMixin, View):
 
-      def get(self, request, *args, **kwargs):
+    def get(self, request, *args, **kwargs):
         form = EventForm()
         
         context = {
@@ -313,7 +308,7 @@ class EventCreateView(LoginRequiredMixin, View):
 
         return render(request, 'myclub/create_event.html', context)
 
-      def post(self, request, *args, **kwargs):
+    def post(self, request, *args, **kwargs):
         form = EventForm(request.POST, request.FILES)
 
         if form.is_valid():
@@ -333,15 +328,18 @@ class EventDetailView(View):
         event = Event.objects.get(pk=pk)
         #form = EventForm()
         # form = ReviewForm()
-
+        current_time = datetime.datetime.now().time()
+        current_date = datetime.datetime.now()
         applications = EventApplication.objects.filter(appliedEvent=pk).order_by('-applicationDate')
         applications_this = applications.filter(applicant=request.user)
         number_of_accepted = len(applications.filter(isApproved=True))
         accepted_applications = applications.filter(isApproved=True)
         application_number = len(applications)
         is_active = True
-        if event.eventDate < timezone.now().date():
-            is_active = False
+
+        if event.eventDate <= current_date.date():
+            if event.eventTime < current_time:
+                is_active = False
         if len(applications) == 0:
             is_applied = False
             is_accepted = False
@@ -410,7 +408,7 @@ class EventDetailView(View):
 
         return redirect('event-detail', pk=event.pk) 
 
-class EventEditView(LoginRequiredMixin, UpdateView):
+class EventEditView(LoginRequiredMixin, View):
     def get(self, request, *args, pk, **kwargs):
         event = Event.objects.get(pk=pk)
         if event.eventOwner == request.user:
@@ -418,7 +416,7 @@ class EventEditView(LoginRequiredMixin, UpdateView):
            
                 form = EventForm(instance = event)
                 context = {
-                'form': form,
+                    'form': form,
                  }
                 return render(request, 'myclub/event_edit.html', context)
             else:
