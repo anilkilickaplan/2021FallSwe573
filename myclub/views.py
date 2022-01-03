@@ -64,6 +64,7 @@ class OfferListView(LoginRequiredMixin, View):
         return render(request, 'myclub/offer_list.html', context)
 
 
+  
 class OfferCreateView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         form = OfferForm()
@@ -163,7 +164,6 @@ class OfferDetailView(View):
         applications_this = applications.filter(applicant=request.user)
         number_of_accepted = len(applications.filter(isApproved=True))
         applicant_user_profile = UserProfile.objects.get(pk=request.user)
-
    
         if len(applications) == 0:
             is_applied = False
