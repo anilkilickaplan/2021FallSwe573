@@ -154,7 +154,7 @@
             {% for comment in comments %}
                 <a href="{% url 'profile' comment.rater.profile.pk %}" class="list-group-item list-group-item-action align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Attendee: {{comment.rater}}</h5>
+                    <h5 class="mb-1">Attendee: {{comment.rater.user.userName}}</h5>
                     <small>Rating: {{comment.rating}}</small>
                 </div>
                 <p class="mb-1">{{ comment.feedback }}</p>
@@ -175,7 +175,7 @@
     <div class="col-md-3">
         <center><h4>Attendee List</h4></center>
         {% if offer.offerOwner == request.user %}
-                    <!-- Offer page attendee list for Offer Owner, can approve or remove-->
+                    <!-- Offer page attendee list for Offer Owner, can approve-->
         </br></br></br>
 
         <table class="table table-hover">
