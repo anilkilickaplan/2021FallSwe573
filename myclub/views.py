@@ -391,7 +391,10 @@ class EventDetailView(View):
                 new_application = form.save(commit=False)
                 new_application.applicant = request.user
                 new_application.appliedEvent = event
-                new_application.isApproved = False
+                if number_of_accepted < event.eventCapacity:
+                    new_application.isApproved = True
+                else:
+                    new_application.isApproved = False
                 new_application.save()
                 applicant_user_profile.save()
                 messages.success(request, 'Your applied for the event')
@@ -616,6 +619,37 @@ class ApplicationEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
     def test_func(self):
         application = self.get_object()
         return self.request.user == application.appliedOffer.offerOwner
+
+
+class EventApplicationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+    model = EventApplication
+    template_name = 'myclub/event-application_delete.html'
+
+    def get_success_url(self):
+        event_pk = self.kwargs['event_pk']
+        event = Event.objects.get(pk=event_pk)
+        application = self.get_object()
+        applicant_user_profile = UserProfile.objects.get(pk=application.applicant.pk)
+        applicationsNext = EventApplication.objects.filter(appliedEvent=event).filter(isApproved=False).order_by('-applicationDate')
+        count = 0
+        for applicationNext in applicationsNext:
+            if count == 0:
+                applicationNext.isApproved = True
+                applicationNext.save()
+                count = 1
+        return reverse_lazy('event-detail', kwargs={'pk': event_pk})
+    
+    def test_func(self):
+        application = self.get_object()
+        isOK = False
+        if self.request.user == application.applicant:
+            isOK = True
+        if self.request.user == application.appliedEvent.eventOwner:
+            isOK = True
+        return isOK
+
+
+
 
 class ConfirmOfferTaken(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):

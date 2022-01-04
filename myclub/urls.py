@@ -40,6 +40,7 @@ urlpatterns = [
     path('offer/<int:offer_pk>/application/edit/<int:pk>/', views.ApplicationEditView.as_view(), name='application-edit'),
     path('offer/<int:pk>/confirmtaken/', views.ConfirmOfferTaken.as_view(), name='confirm-offer-taken'),
     path('offer/<int:pk>/confirmgiven/', views.ConfirmOfferGiven.as_view(), name='confirm-offer-given'),
+    path('event/<int:event_pk>/application/delete/<int:pk>', views.EventApplicationDeleteView.as_view(), name='event-application-delete'),
 
     #RATING and REVIEW
     path('rate/<int:offerpk>/<int:ratedpk>', views.RateUser.as_view(), name='rateuser'),

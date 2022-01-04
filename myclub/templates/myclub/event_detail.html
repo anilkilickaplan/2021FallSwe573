@@ -88,7 +88,7 @@
                     {% if is_active %}
                         {% for application in applications_this %}
                             <div class="d-grid gap-2">
-                                <a class="btn btn-danger mt-3" href="{% url 'application-delete' event.pk application.pk %}">Cancel Application</a>
+                                <a class="btn btn-danger mt-3" href="{% url 'event-application-delete' event.pk application.pk %}">Cancel Application</a>
                             </div>
                         {% endfor %}
                     {% endif %}
