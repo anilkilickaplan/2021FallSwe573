@@ -18,14 +18,14 @@ To use this project, first clone the repo on your device using the command below
 
 ```git clone https://github.com/anilkilickaplan/2021FallSwe573```
 
-System Manual
-Make sure local system has: postgresql, docker and git
-Create a virtual environment (arbitrary name for virtual env is “myvenv”)
-Go to project directory and in your IDE terminal please write: “source myvenv/bin/activate”
-Install Dependencies pip install -r requirements.txt
-Go to the project directory, open ShareClub and open “.env.example.”
-Change file name to “.env”
-Update the inside of the document as follows.
+##System Manual
+Make sure local system has: postgresql, docker and git\
+Create a virtual environment (arbitrary name for virtual env is “myvenv”)\
+Go to project directory and in your IDE terminal please write: “source myvenv/bin/activate”\
+Install Dependencies pip install -r requirements.txt\
+Go to the project directory, open ShareClub and open “.env.example.”\
+Change file name to “.env”\
+Update the inside of the document as follows.\
 DJANGO_SECRET_KEY= <your django secret key>\
 DJANGO_DEBUG=True\
 DJANGO_ALLOWED_HOSTS="0.0.0.0"\
