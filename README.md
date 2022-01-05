@@ -26,30 +26,30 @@ Install Dependencies pip install -r requirements.txt
 Go to the project directory, open ShareClub and open “.env.example.”
 Change file name to “.env”
 Update the inside of the document as follows.
-DJANGO_SECRET_KEY= <your django secret key>
-DJANGO_DEBUG=True
-DJANGO_ALLOWED_HOSTS="0.0.0.0"
-POSTGRES_HOST_AUTH_METHOD= trust
+DJANGO_SECRET_KEY= <your django secret key>\
+DJANGO_DEBUG=True\
+DJANGO_ALLOWED_HOSTS="0.0.0.0"\
+POSTGRES_HOST_AUTH_METHOD= trust\
  
-DB_ENGINE=django.db.backends.postgresql_psycopg2
-DB_NAME=DevShareclub
-DB_USER=postgres
-DB_PASSWORD=q1w2e3
-DB_HOST=localhost
-DB_PORT=5432
+DB_ENGINE=django.db.backends.postgresql_psycopg2\
+DB_NAME=DevShareclub\
+DB_USER=postgres\
+DB_PASSWORD=q1w2e3\
+DB_HOST=localhost\
+DB_PORT=5432\
  
-CORS_ALLOWED_ORIGINS="http://localhost:3000 http://127.0.0.1:3000"
+CORS_ALLOWED_ORIGINS="http://localhost:3000 http://127.0.0.1:3000"\
  
  
-After the update above, you need to create a database in your local environment. To create a database follow the next step.
-Create a Database in your local
-docker-compose start db 
-docker exec -it core_db bash
-psql -U postgres
-CREATE DATABASE 
-After creating a database, docker-compose up --build. Check if the containers are up and running.
-Create Super User (for Admin page) python manage.py createsuperuser
-Run Server python manage.py runserver
+After the update above, you need to create a database in your local environment. To create a database follow the next step.\
+*Create a Database in your local
+*docker-compose start db 
+*docker exec -it core_db bash
+*psql -U postgres
+*CREATE DATABASE 
+*After creating a database, docker-compose up --build. Check if the containers are up and running.
+*Create Super User (for Admin page) python manage.py createsuperuser
+*Run Server python manage.py runserver
 
 
 
