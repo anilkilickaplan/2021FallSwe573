@@ -50,7 +50,7 @@ After the update above, you need to create a database in your local environment.
 -CREATE DATABASE \
 -After creating a database, docker-compose up --build. Check if the containers are up and running.\
 -Create Super User (for Admin page) python manage.py createsuperuser\
--Run Server python manage.py runserver
+-Run Server python manage.py runserver\
 -Go to your local host por 80 in the browser, 127.0.0.1:80
 
 
