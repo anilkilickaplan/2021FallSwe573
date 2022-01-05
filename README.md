@@ -32,7 +32,7 @@ DJANGO_ALLOWED_HOSTS="0.0.0.0"\
 POSTGRES_HOST_AUTH_METHOD= trust
  
 DB_ENGINE=django.db.backends.postgresql_psycopg2\
-DB_NAME=DevShareclub\
+DB_NAME=devshareclub\
 DB_USER=postgres\
 DB_PASSWORD=q1w2e3\
 DB_HOST=localhost\
@@ -47,7 +47,7 @@ After the update above, you need to create a database in your local environment.
 -docker-compose start db\
 -docker exec -it core_db bash\
 -psql -U postgres\
--CREATE DATABASE \
+-CREATE DATABASE devshareclub;\
 -After creating a database, docker-compose up --build. Check if the containers are up and running.\
 -Create Super User (for Admin page) python manage.py createsuperuser\
 -Run Server python manage.py runserver\
