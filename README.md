@@ -43,13 +43,13 @@ CORS_ALLOWED_ORIGINS="http://localhost:3000 http://127.0.0.1:3000"\
  
 After the update above, you need to create a database in your local environment. To create a database follow the next step.\
 
--Create a Database in your local
--docker-compose start db 
--docker exec -it core_db bash
--psql -U postgres
--CREATE DATABASE 
--After creating a database, docker-compose up --build. Check if the containers are up and running.
--Create Super User (for Admin page) python manage.py createsuperuser
+-Create a Database in your local\
+-docker-compose start db\
+-docker exec -it core_db bash\
+-psql -U postgres\
+-CREATE DATABASE \
+-After creating a database, docker-compose up --build. Check if the containers are up and running.\
+-Create Super User (for Admin page) python manage.py createsuperuser\
 -Run Server python manage.py runserver
 
 
