@@ -26,7 +26,7 @@ To use this project, first clone the repo on your device using the command below
 - Install Dependencies $ pip install -r requirements.txt
 - Go to the project directory, open ShareClub and open “.env.example.”
 - Change file name to “.env”. Update the inside of the document as follows.
-
+```
  * DJANGO_SECRET_KEY= <your django secret key>
  * DJANGO_DEBUG=True
  * DJANGO_ALLOWED_HOSTS="0.0.0.0"
@@ -38,9 +38,10 @@ To use this project, first clone the repo on your device using the command below
  * DB_HOST=db
  * DB_PORT=5432
  * CORS_ALLOWED_ORIGINS="http://localhost:3000 http://127.0.0.1:3000"
+ ```
 - After step 6, you need to create a database in your local environment. To create a database follow the next step. As mentioned above, make sure that Docker desktop is up and running.
 - Create a Database in your local with the following commands (write without $ sign).
-'''
+
 $ docker-compose up --build
 $ docker-compose start db 
 $ docker exec -it core_db bash
