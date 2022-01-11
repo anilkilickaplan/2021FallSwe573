@@ -20,7 +20,7 @@ To use this project, first clone the repo on your device using the command below
 
 ## System Manual
 
-- Make sure local system has: postgresql, docker and git
+Before starting, please make sure your local system has postgresql, docker and git.
 - Create a virtual environment (arbitrary name for virtual env is “myvenv”)
 - Go to project directory and in your IDE terminal please write: “source myvenv/bin/activate”
 - Install Dependencies $ pip install -r requirements.txt
