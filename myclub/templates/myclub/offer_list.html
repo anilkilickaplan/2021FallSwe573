@@ -84,11 +84,13 @@
                                 {% else %}
                                     <span class="badge bg-primary">General</span>
                                 {% endif %} 
+                                <span class="badge bg-success">{{ offer.offerTag }}</span>
                                 <!-- <p class="card-text">Description: {{ offer.offerDescription }}</p> -->
                                 <p class="card-text">Location: {{ offer.offerLocation }}</p> 
                                 <p class="card-text">Date: {{ offer.offerDate }}, {{ offer.offerTime }}</p>
                                 <p class="card-text">Duration: {{ offer.offerDuration }}</p>
                                 <p class="card-text">Capacity: {{ offer.offerCapacity }}</p>
+
                                 <a href="{% url 'offer-detail' offer.pk %}" class="stretched-link"></a>
       
                             </div>

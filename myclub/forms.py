@@ -15,12 +15,13 @@ class OfferForm(forms.ModelForm):
 
     class Meta:
         model = Offer
-        fields = ['offerPicture','offerName','offerDescription', 'offerCategory',
+        fields = ['offerPicture','offerName','offerDescription', 'offerCategory','offerTag',
                   'offerDate','offerTime','offerDuration','offerCapacity','offerLocation','offerMap']
         widgets = { 
             'offerName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Name'}),
             'offerDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Offer Description'}), 
             'offerCategory':forms.Select(choices= choices, attrs={'class': 'form-control'}),
+            'offerTag':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Offer Tag'}),
             'offerDate': DateInput(attrs={'type': 'date'}),
             'offerTime': TimeInput(format=('%H:%M'),attrs={'type': 'time'}),
             'offerDuration': forms.NumberInput(),
@@ -32,7 +33,7 @@ class OfferForm(forms.ModelForm):
 class EventForm(forms.ModelForm):
     class Meta:
         model = Event
-        fields = ['eventPicture','eventName','eventDescription', 'eventCategory','eventDate','eventTime','eventCapacity','eventMap']
+        fields = ['eventPicture','eventName','eventDescription', 'eventCategory','eventDate','eventTime','eventCapacity','eventLocation','eventMap']
         widgets = { 
             'eventName':forms.Textarea(attrs={'rows': '1','class': 'form-control','placeholder': 'Event Name'}),
             'eventDescription':forms.Textarea(attrs={'rows': '5','class': 'form-control','placeholder': 'Event Description'}), 

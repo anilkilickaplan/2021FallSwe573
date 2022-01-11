@@ -12,6 +12,7 @@ urlpatterns = [
     path('offer', views.OfferListView.as_view(), name='offer-list'),
     path('offer/create', views.OfferCreateView.as_view(), name='offer-create'),
     path('offer/<int:pk>', views.OfferDetailView.as_view(), name='offer-detail'),
+    path('offer/<int:pk>/moredetail', views.OfferDetailView.as_view(), name='offer-moredetail'),
     path('offer/edit/<int:pk>', views.OfferEditView.as_view(), name='offer-edit'),
     path('offer/delete/<int:pk>', views.OfferDeleteView.as_view(), name='offer-delete'),
     
@@ -30,13 +31,13 @@ urlpatterns = [
     path('myevents/<int:pk>', views.myEventsView.as_view(), name='myevents-list'),
 
     # Followers
-    path('profile/<int:pk>/userfollowers/', views.FollowersListView.as_view(), name='followers'),
-    path('profile/<int:pk>/userfollowers/add/<int:followpk>', views.AddFollower.as_view(), name='add-userfollower'),
-    path('profile/<int:pk>/userfollowers/remove/<int:followpk>', views.RemoveFollower.as_view(), name='remove-userfollower'),
-    path('userfollowers/remove/<int:userfollower_pk>', views.RemoveMyFollower.as_view(), name='remove-my-userfollower'),
+    path('profile/<int:pk>/userfollowers/', views.ListFollowers.as_view(), name='followers'),
+    path('profile/<int:pk>/userfollowers/add/<int:followpk>', views.Follow.as_view(), name='follow'),
+    path('profile/<int:pk>/userfollowers/remove/<int:followpk>', views.Unfollow.as_view(), name='unfollow'),
+    path('userfollowers/remove/<int:userfollower_pk>', views.DropFollower.as_view(), name='remove-my-userfollower'),
 
     # APPLICATIONS
-    path('offer/<int:offer_pk>/application/delete/<int:pk>', views.ApplicationDeleteView.as_view(), name='application-delete'),
+    path('offer/<int:offer_pk>/application/delete/<int:pk>', views.OfferApplicationDeleteView.as_view(), name='offer-application-delete'),
     path('offer/<int:offer_pk>/application/edit/<int:pk>/', views.ApplicationEditView.as_view(), name='application-edit'),
     path('offer/<int:pk>/confirmtaken/', views.ConfirmOfferTaken.as_view(), name='confirm-offer-taken'),
     path('offer/<int:pk>/confirmgiven/', views.ConfirmOfferGiven.as_view(), name='confirm-offer-given'),

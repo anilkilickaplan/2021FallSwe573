@@ -49,10 +49,10 @@ class EventFormTest(TestCase):
         'eventName':'testEventName',
         'eventDescription':'TesteventDescription', 
         'eventCategory':'Technology',
-        'eventDate':'2022-01-01',
+        'eventDate':'2022-02-29',
         'eventTime':'1:03',
         'eventDuration':'2',
-        'eventCapacity':'12',
+        'eventCapacity':'120',
         'eventLocation':'Manisa',
         'eventMap':'41.031964, 29.008841'}
         form = EventForm(data = form_data)
