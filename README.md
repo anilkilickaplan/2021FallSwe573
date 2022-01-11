@@ -40,13 +40,14 @@ To use this project, first clone the repo on your device using the command below
  * CORS_ALLOWED_ORIGINS="http://localhost:3000 http://127.0.0.1:3000"
 - After step 6, you need to create a database in your local environment. To create a database follow the next step. As mentioned above, make sure that Docker desktop is up and running.
 - Create a Database in your local with the following commands (write without $ sign).
- 
- * $ docker-compose up --build
- * $ docker-compose start db 
- * $ docker exec -it core_db bash
- * $ psql -U postgres
- * $ CREATE DATABASE devshareclub;
- * $ /l  (to check if the database is created).
+'''
+$ docker-compose up --build
+$ docker-compose start db 
+$ docker exec -it core_db bash
+$ psql -U postgres
+$ CREATE DATABASE devshareclub;
+$ /l  (to check if the database is created).
+ '''
  
 - After creating a database, write “docker-compose up” in your terminal. Check if the containers are up and running.
 - Create Super User (for Admin page) “python manage.py createsuperuser”
