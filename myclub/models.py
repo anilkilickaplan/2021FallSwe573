@@ -23,6 +23,8 @@ class Offer(models.Model):
     is_given = models.BooleanField(default=False)
     offerPicture = models.ImageField(upload_to='uploads/offer_pictures/',default='uploads/offer_pictures/default.png', blank=True)
     offerCategory = models.TextField(max_length=20,blank=True)
+    offerTag = models.TextField(max_length=20,blank=True)
+
 
 class Event(models.Model):
     eventOwner = models.ForeignKey(User, on_delete=models.CASCADE)

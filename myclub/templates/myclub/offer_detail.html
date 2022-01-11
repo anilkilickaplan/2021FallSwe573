@@ -53,8 +53,30 @@
             <img class="w3-round" src="{{offer.offerPicture.url}}" alt="" style="width:50%">
 
             <p> <a href="{% url 'profile' offer.offerOwner.profile.pk %}">Hosted by {{offer.offerOwner.profile.userName}}</a> </p>
+
+            {% if offer.offerCategory != ""%}
+            {% if offer.offerCategory == 'General' %}
+                <span class="badge bg-success">General</span>
+            {% elif offer.offerCategory == 'Art' %}
+                <span class="badge bg-warning">Art</span>
+            {% elif offer.offerCategory == 'Food' %}
+                <span class="badge bg-danger">Food</span>
+            {% elif offer.offerCategory == 'Technology' %}
+                <span class="badge bg-info">Technology</span>
+            {% elif offer.offerCategory == 'Finance' %}
+                <span class="badge bg-success">Finance</span>
+            {% else %}
+                <span class="badge bg-secondary">{{ offer.offerCategory }}</span>
+            {% endif %} 
+     
+            {% else %}
+                <span class="badge bg-primary">General</span>
+            {% endif %} 
+            <span class="badge bg-success">{{ offer.offerTag }}</span>
+            <!-- <p class="card-text">Description: {{ offer.offerDescription }}</p> -->
             <p><strong>Duration: </strong>{{ offer.offerDuration }}</p>
-            <p><strong>Category: </strong>{{ offer.offerCategory }}</p>           
+            <p><strong>Tag: </strong>{{ offer.offerTag}}</p> 
+            <p><strong>Category: </strong>{{ offer.offerCategory }}</p>                     
             <p><strong>Description: </strong>{{ offer.offerDescription }}</p>
             <p><strong>Date: </strong>{{ offer.offerDate }}</p>
             <p><strong>Time: </strong>{{ offer.offerTime }}</p>
@@ -81,6 +103,12 @@
                 </div>
             </div>
         
+            <form method="POST" action="{% url 'offer-moredetail' offer.pk %}">
+                {% csrf_token %}
+                <div class="d-grid gap-2">
+                    <button class="btn btn-info mt-3" type=submit>Show more detail</button>
+                </div>
+            </form>
             {% if offer.offerOwner == request.user %}
                 {% if is_active == False %}  
                     {% if offer.is_given == False %}
@@ -154,7 +182,7 @@
             {% for comment in comments %}
                 <a href="{% url 'profile' comment.rater.profile.pk %}" class="list-group-item list-group-item-action align-items-start">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Attendee: {{comment.rater.user.userName}}</h5>
+                    <h5 class="mb-1">Attendee: {{comment.rater.profile.userName}}</h5>
                     <small>Rating: {{comment.rating}}</small>
                 </div>
                 <p class="mb-1">{{ comment.feedback }}</p>

@@ -20,6 +20,7 @@ from django.db.models import Avg
 
 
 
+
 # OFFER RELATED 
 class OfferListView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
@@ -38,7 +39,8 @@ class OfferListView(LoginRequiredMixin, View):
         if searchOffer != '':
             offers  = offers.filter(Q (offerName__icontains = searchOffer) | 
                                     Q (offerDescription__icontains = searchOffer)|
-                                    Q (offerCategory__icontains = searchOffer) ) 
+                                    Q (offerCategory__icontains = searchOffer) |
+                                    Q (offerTag__icontains = searchOffer) ) 
             if offers =='':
                 messages.warning(request,"No match with the keyword")
 
@@ -557,32 +559,32 @@ class myOffersView(View):
             messages.WARNING(request,("There is a problem with authentication. my_offers (views) could not fetch user authentication"))
 
 
-
-
-class AddFollower(LoginRequiredMixin, View):
+class Follow(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         follow_pk = self.kwargs['followpk']
         profile = UserProfile.objects.get(pk=pk)
         profile.userFollowers.add(request.user)
+        
         return redirect('profile', pk=follow_pk)
 
-class RemoveFollower(LoginRequiredMixin, View):
+class Unfollow(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         follow_pk = self.kwargs['followpk']
         profile = UserProfile.objects.get(pk=pk)
         profile.userFollowers.remove(request.user)
+       
         return redirect('profile', pk=follow_pk)
 
-class RemoveMyFollower(LoginRequiredMixin, View):
+class DropFollower(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         userFollower_pk = self.kwargs['userFollower_pk']
         userFollower = UserProfile.objects.get(pk=userFollower_pk).user
         profile = UserProfile.objects.get(pk=request.user.pk)
         profile.userFollowers.remove(userFollower)
         
-        return redirect('userFollowers', pk=request.user.pk)
+        return redirect('followers', pk=request.user.pk)
 
-class FollowersListView(LoginRequiredMixin, View):
+class ListFollowers(LoginRequiredMixin, View):
     def get(self, request, pk, *args, **kwargs):
         profile = UserProfile.objects.get(pk=pk)
         userFollowers = profile.userFollowers.all()
@@ -595,7 +597,7 @@ class FollowersListView(LoginRequiredMixin, View):
         return render(request, 'myclub/userfollowers_list.html', context)
 
 
-class ApplicationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
+class OfferApplicationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = OfferApplication
     template_name = 'myclub/application_delete.html'
 
@@ -623,7 +625,7 @@ class ApplicationEditView(LoginRequiredMixin, UserPassesTestMixin, UpdateView):
 
 class EventApplicationDeleteView(LoginRequiredMixin, UserPassesTestMixin, DeleteView):
     model = EventApplication
-    template_name = 'myclub/event-application_delete.html'
+    template_name = 'myclub/event_application_delete.html'
 
     def get_success_url(self):
         event_pk = self.kwargs['event_pk']
@@ -648,9 +650,6 @@ class EventApplicationDeleteView(LoginRequiredMixin, UserPassesTestMixin, Delete
             isOK = True
         return isOK
 
-
-
-
 class ConfirmOfferTaken(LoginRequiredMixin, View):
     def post(self, request, pk, *args, **kwargs):
         offer = Offer.objects.get(pk=pk)
@@ -671,15 +670,15 @@ def CreditExchange(offer):
     applications = OfferApplication.objects.filter(appliedOffer=offer.pk).filter(isApproved=True)
     if offer.is_taken == True:
         if offer.is_given == True:
-            offer_giver = UserProfile.objects.get(pk=offer.offerOwner.pk)
-            offer_giver.userCredits = offer_giver.userCredits + offer.offerDuration
-            offer_giver.userReservehour = offer_giver.userReservehour - offer.offerDuration
-            offer_giver.save()
+            offer_owner_credit_ex = UserProfile.objects.get(pk=offer.offerOwner.pk)
+            offer_owner_credit_ex.userCredits = offer_owner_credit_ex.userCredits + offer.offerDuration
+            offer_owner_credit_ex.userReservehour = offer_owner_credit_ex.userReservehour - offer.offerDuration
+            offer_owner_credit_ex.save()
             for application in applications:
-                offer_taker = UserProfile.objects.get(pk=application.applicant.pk)
-                offer_taker.userCredits = offer_taker.userCredits - offer.offerDuration
-                offer_taker.userReservehour = offer_taker.userReservehour + offer.offerDuration
-                offer_taker.save()
+                offer_applicant_credit_ex = UserProfile.objects.get(pk=application.applicant.pk)
+                offer_applicant_credit_ex.userCredits = offer_applicant_credit_ex.userCredits - offer.offerDuration
+                offer_applicant_credit_ex.userReservehour = offer_applicant_credit_ex.userReservehour + offer.offerDuration
+                offer_applicant_credit_ex.save()
     return redirect('offer-detail', pk=offer.pk)
 
 
@@ -765,3 +764,28 @@ class RateUserDelete(LoginRequiredMixin, View):
         rating.delete()
         return redirect('offer-detail', pk=offer.pk)
 
+class OfferMoreDetail(View):
+    def get(self, request, pk, *args, **kwargs):
+        offer = Offer.objects.get(pk=pk)
+        #response = requests.get('https://en.wikipedia.org/w/api.php')
+        api_endpoint = "https://www.wikidata.org/w/api.php"
+
+        query = offer.offerTag
+        params = {
+            'action':'wbsearchentities',
+            'format': 'json',
+            'language': 'en',
+            'search': query
+        }
+
+        result = requests.get(api_endpoint, params = params)
+        json_print = result.json()['search'][0]
+
+        context = {
+             json_print
+            
+        }
+        
+        return render(request, 'myclub/offer_more_detail.html', context)
+
+        #return redirect('offer-moredetail',pk=offer.pk)
