@@ -18,7 +18,7 @@ To use this project, first clone the repo on your device using the command below
 
 ```git clone https://github.com/anilkilickaplan/2021FallSwe573```
 
-##System Manual
+## System Manual
 /*:
 - Make sure local system has: postgresql, docker and git
 - Create a virtual environment (arbitrary name for virtual env is “myvenv”)
