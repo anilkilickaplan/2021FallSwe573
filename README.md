@@ -19,7 +19,7 @@ To use this project, first clone the repo on your device using the command below
 ```git clone https://github.com/anilkilickaplan/2021FallSwe573```
 
 ## System Manual
-/*:
+
 - Make sure local system has: postgresql, docker and git
 - Create a virtual environment (arbitrary name for virtual env is “myvenv”)
 - Go to project directory and in your IDE terminal please write: “source myvenv/bin/activate”
@@ -53,7 +53,7 @@ $ /l  (to check if the database is created).
 - After creating a database, write “docker-compose up” in your terminal. Check if the containers are up and running.
 - Create Super User (for Admin page) “python manage.py createsuperuser”
 - Go to your local host port 80 in the browser, 127.0.0.1:80
- */
+ 
 
 
 
